@@ -1,0 +1,39 @@
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+main > .container {
+  padding: 60px 15px 0;
+}
+table.dataTable thead>tr>th.sorting:after,table.dataTable thead>tr>th.sorting:before{ 
+  display: none !important;
+} 
+table.dataTable{
+  margin-top: 10px !important;
+}
+.card{
+  box-shadow: 10px 10px 15px #444A4F;
+}
+ nav, .footer{
+  box-shadow: 5px 5px 15px #444A4F;
+ }
+.loading-spiner{
+   max-width:100% !important;
+   position:absolute;
+   z-index:5;
+   margin:auto;
+   margin-top:200px;
+   text-align:center;
+   border: 1px border red;
+
+}
+.loading-spiner img{
+  border: 1px border red;
+  max-width:50px;
+  max-height:50px;
+  position:absolute;
+  z-index: 5;
+  margin-top: 150px;
+  margin-left:auto;
+}
+ 

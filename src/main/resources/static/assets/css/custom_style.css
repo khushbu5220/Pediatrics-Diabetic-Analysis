@@ -1,0 +1,220 @@
+@charset "ISO-8859-1";
+    .chat-history::-webkit-scrollbar , #friends::-webkit-scrollbar, #received::-webkit-scrollbar, #sent::-webkit-scrollbar{
+	  display: none;
+	}
+	ul {
+	    list-style-type: none;
+	}
+	.list-group-item{
+	  padding: 4px;
+	}
+	.connected_user{
+	  background-color:#69B190; 
+	  color: white;
+	}
+	.tab-pane{
+	  padding: 10px;
+	}
+	.users{
+	  padding: 6px;
+	  width: 100%;
+	  border: 1px solid white;
+	}
+	.chat .chat-history .message {
+	    color: white;
+	    padding: 18px 20px;
+	    line-height: 26px;
+	    font-size: 16px;
+	    border-radius: 7px;
+	    margin-bottom: 30px;
+	    width: 90%;
+	    position: relative;
+	}
+	
+	.chat .chat-history .message:after {
+	    bottom: 100%;
+	    left: 7%;
+	    border: solid transparent;
+	    content: " ";
+	    height: 0;
+	    width: 0;
+	    position: absolute;
+	    pointer-events: none;
+	    border-bottom-color: #86BB71;
+	    border-width: 10px;
+	    margin-left: -10px;
+	}
+       .chat .chat-history .my-message {
+	    background: #86BB71;
+	}
+	
+	.chat .chat-history .other-message {
+	    background: #94C2ED;
+	}
+	
+	.online, .offline, .me {
+	    margin-right: 3px;
+	    font-size: 10px;
+	}
+	.online {
+	    color: #86BB71;
+	}
+	
+	.offline {
+	    color: #E38968;
+	}
+	
+	.me {
+	    color: #94C2ED;
+	}
+	
+	.align-left {
+	    text-align: left;
+	}
+	
+	.align-right {
+	    text-align: right;
+	}
+	
+	.float-right {
+	    margin-right: 10px;
+	    float: right;
+	}
+	.float-left{
+	    margin-left: 0px;
+	}
+	.clearfix:after {
+	    visibility: hidden;
+	    display: block;
+	    font-size: 0;
+	    content: " ";
+	    clear: both;
+	    height: 0;
+	}
+
+	/* Custom css */
+	.logo{
+		margin-left: auto;
+		margin-bottom: 20px;
+	 }
+	 #myTab, #myTab li button{
+		 width: 100%;
+	 }
+	 #myTab li{
+	   width: 33%;
+	 }
+	 .user-list-table{
+	   width: 100%;
+	 }
+	 .user-list-table-col-1{
+	   width: 10%;
+	   text-align: left;
+	 }
+	 .user-list-table-col-2{
+	   width: 65%;
+	   text-align: left;
+	 }
+	 .user-list-table-col-2 h6{
+	   margin-bottom: 0.05rem;
+	 }
+	 #back-btn{
+	  color:white;
+	  display: none;
+	  float:left; 
+	  font-size: 24px; 
+	  margin:5px; margin-right: 15px;
+	 }
+	 .header-btn{
+	  text-decoration: none;
+	  font-weight: bold;
+	  color:white;
+	  font-size: 22px;
+	 }
+	 .header-btn:hover{
+	   color: white;
+	 }
+	 .my-message, .other-message{
+	   max-width: 70%; 
+	   border:1px solid lightgray;
+	   border-radius: 5px;
+	   padding: 5px;
+	 }
+	 
+	 .my-message{
+	   float:left;
+	 }
+	 .other-message{
+		  text-align: right;
+	 }
+	 .user-on-line-circle, .user-off-line-circle{
+	  width: 12px;
+	  height: 12px;
+	  border-radius: 50%;
+	  float: left;
+	  margin-left: 8px;
+	  margin-bottom: 23px;
+	  }
+	  .user-on-line-circle{
+		  background-color: lightgreen;
+	  }
+	  .user-on-line-circle-2{
+		  font-size: 12px;
+		  border-radius: 50%;
+		  background-color: lightgreen;
+	  }
+	 .message-time{
+		  width: 25%;
+		  border-radius: 3px;
+		  padding: 2px;
+		  margin: 8px auto;
+		  text-align: center;
+	  }
+	  .sender-time{
+		  font-size:10px; float:right; padding:0px 8px; margin-top:12px;
+	  }
+	  .reciever-profile{
+		 float: left;
+		 height: 50px;
+		 border-radius: 50%;
+		 margin-right:10px;
+	  }
+	  .my-profile{
+		 height: 80px;
+		 border-radius: 50%;
+	  }
+	  .friend-profile{
+		 width: 10%;
+	  }
+	  .friend-profile img{
+		 border-radius: 50%;
+		 height: 40px; 
+	  }
+	 @media only screen and (max-width: 450px) {
+		.user-home{
+		   padding: 10px;
+		}
+		.sm-w-50 {
+		   width: 50%;
+		 }
+		 #chat-section{
+		   display: none;
+		   padding-top: 5px!important;
+		 }
+		 #connection-form{
+		   padding-bottom: 5px!important;
+		 }
+		 #back-btn{
+		   display: block;
+		 }
+		.message-time{
+		   width: 40% !important;
+		}
+	 }
+	 @media only screen and (min-width: 450px) {
+		.user-home{
+		   padding: 20px;
+		}
+		#friends, #received, #sent{
+           max-height: 275px; overflow:scroll;
+        }
+	 }
