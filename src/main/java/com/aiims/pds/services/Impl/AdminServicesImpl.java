@@ -4,8 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +14,8 @@ import com.aiims.pds.modals.User;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.services.AdminServices;
+
+import jakarta.validation.Valid;
 
 @Service
 public class AdminServicesImpl implements AdminServices 

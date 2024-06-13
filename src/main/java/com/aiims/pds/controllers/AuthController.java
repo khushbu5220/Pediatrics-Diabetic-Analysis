@@ -1,7 +1,5 @@
 package com.aiims.pds.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +22,9 @@ import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.security.JwtTokenHelper;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @CrossOrigin("*")
 @RestController
@@ -50,14 +51,11 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<JwtAuthResponse> createToken(HttpServletRequest req, HttpServletResponse res,@RequestBody JwtAuthRequest request) throws Exception
 	{
-		System.out.println(request.getUsername()+" , "+request.getPassword());
 		this.authenticate(request.getUsername(),request.getPassword());
 		UserDetails userDetails  = this.userDetailsService.loadUserByUsername(request.getUsername());
-		System.out.println("userDetails : "+userDetails);
 		String token = this.jwtTokenHelper.generateToken(userDetails);
 		UserDto userData = this.modelMapper.map(this.userRepository.getRoleByContactNo(request.getUsername())
 				.orElseThrow(() -> new ResourceNotFoundException("Username", "Employee ID", request.getUsername())), UserDto.class);
-		System.out.println("userData : "+userData);
 //		sessionFunction(req,res,userData.getEmployeeId());
 		JwtAuthResponse response = new JwtAuthResponse();
 		response.setRole(userData.getRole());

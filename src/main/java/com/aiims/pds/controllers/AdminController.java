@@ -3,8 +3,6 @@ package com.aiims.pds.controllers;
 import java.security.Principal;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,8 @@ import com.aiims.pds.modals.User;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.services.AdminServices;
+
+import jakarta.validation.Valid;
 
 @CrossOrigin("*")
 @RestController

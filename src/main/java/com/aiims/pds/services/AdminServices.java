@@ -2,10 +2,10 @@ package com.aiims.pds.services;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import com.aiims.pds.modals.User;
 import com.aiims.pds.payloads.UserDto;
+
+import jakarta.validation.Valid;
 
 public interface AdminServices 
 {
