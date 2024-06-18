@@ -1,6 +1,7 @@
 package com.aiims.pds.modals;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -64,4 +65,6 @@ public class FollowUp
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private FootExamination footExamination;
 	private String remarks;
+	private String status;
+	private Date cdt;
 }

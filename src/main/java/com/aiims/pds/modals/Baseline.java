@@ -1,6 +1,7 @@
 package com.aiims.pds.modals;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -60,5 +61,5 @@ public class Baseline
 	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private List<FollowUp> followUps;
 	private String status;
-	private String cdt;
+	private Date cdt;
 }

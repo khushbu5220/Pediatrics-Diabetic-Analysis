@@ -41,6 +41,6 @@ public class Investigation
 	private String remarks;
 	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private List<HbA1cTable> hbA1ctable;
-//	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
-//	private List<InvestigationTable> investigationTable;
+	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
+	private List<InvestigationTable> investigationTable;
 }

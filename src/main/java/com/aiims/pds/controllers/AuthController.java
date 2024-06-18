@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -52,7 +53,8 @@ public class AuthController {
 	public ResponseEntity<JwtAuthResponse> createToken(HttpServletRequest req, HttpServletResponse res,@RequestBody JwtAuthRequest request) throws Exception
 	{
 		this.authenticate(request.getUsername(),request.getPassword());
-		UserDetails userDetails  = this.userDetailsService.loadUserByUsername(request.getUsername());
+		UserDetails userDetails  = User.withUsername(request.getUsername()).password(request.getPassword()).build();
+//				this.userDetailsService.loadUserByUsername(request.getUsername());
 		String token = this.jwtTokenHelper.generateToken(userDetails);
 		UserDto userData = this.modelMapper.map(this.userRepository.getRoleByContactNo(request.getUsername())
 				.orElseThrow(() -> new ResourceNotFoundException("Username", "Employee ID", request.getUsername())), UserDto.class);
