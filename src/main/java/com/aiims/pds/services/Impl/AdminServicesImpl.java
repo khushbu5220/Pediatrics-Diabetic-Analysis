@@ -11,13 +11,17 @@ import org.springframework.stereotype.Service;
 
 import com.aiims.pds.config.AppConstants;
 import com.aiims.pds.modals.User;
+import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
+import com.aiims.pds.security.JwtTokenService;
 import com.aiims.pds.services.AdminServices;
 
 import jakarta.validation.Valid;
+import lombok.NoArgsConstructor;
 
 @Service
+@NoArgsConstructor
 public class AdminServicesImpl implements AdminServices 
 {
 	@Autowired
@@ -26,32 +30,27 @@ public class AdminServicesImpl implements AdminServices
 	private ModelMapper modelMapper;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+//	@Autowired
+	private JwtTokenService jwtTokenService;
 
 	@Override
 	public UserDto registerSuperAdminUser(@Valid UserDto userDto) 
 	{
-		User adduser = this.modelMapper.map(userDto, User.class);
-		//status
-		if(userDto.getStatus()!=null) {
-			adduser.setStatus(userDto.getStatus());
-		}else {
-			adduser.setStatus(AppConstants.ACTIVE_USER_STATUS);
-		}
+		var user = User.builder()
+				.contactNo(userDto.getContactNo())
+				.email(userDto.getEmail())
+				.enabled(true)
+				.fullName(userDto.getFullName())
+				.otp(0)
+				.otpSentOn(null)
+				.password(passwordEncoder.encode(userDto.getPassword()))
+				.registeredOn(new Date())
+				.role(userDto.getRole().toUpperCase())
+				.status(AppConstants.ACTIVE_USER_STATUS)
+				.userAddedBy(null)
+				.build();	
 		
-		//enabled user
-		adduser.setEnabled(true);
-		//encoded the password
-		System.out.println("pswd : "+this.passwordEncoder.encode(userDto.getPassword())+" | "+userDto.getPassword());
-		adduser.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
-		//registered on
-		adduser.setRegisteredOn(new Date());
-		
-		adduser.setRole(userDto.getRole());
-//		adduser.setUserAddedBy(0L);
-		
-		User saveduser = this.userRepository.save(adduser);
-		System.out.println("saveduser : "+saveduser.toString());
-		return this.modelMapper.map(saveduser, UserDto.class);
+		return this.modelMapper.map(this.userRepository.save(user), UserDto.class);  
 	}
 	
 	@Override
@@ -77,7 +76,7 @@ public class AdminServicesImpl implements AdminServices
 		
 		User saveduser = this.userRepository.save(adduser);
 		return this.modelMapper.map(saveduser, UserDto.class);
-	}
+	} 
 
 	@Override
 	public List<UserDto> getUsers() {

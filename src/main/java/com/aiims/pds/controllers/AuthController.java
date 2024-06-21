@@ -22,18 +22,21 @@ import com.aiims.pds.payloads.JwtAuthRequest;
 import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
-import com.aiims.pds.security.JwtTokenHelper;
+import com.aiims.pds.security.JwtTokenService;
+import com.aiims.pds.security.JwtTokenService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/auth/")
+@RequiredArgsConstructor
 public class AuthController {
 
 	@Autowired
-	private JwtTokenHelper jwtTokenHelper;
+	private JwtTokenService jwtTokenService;
 	@Autowired
 	private UserDetailsService userDetailsService;
 	@Autowired
@@ -42,42 +45,22 @@ public class AuthController {
 	private ModelMapper modelMapper;
 	@Autowired
 	private UserRepository userRepository;
-//	@Autowired
-//	private SessionRepo sessionRepo;
-//	@Autowired
-//	private AdminServices adminServices;
-	
-//	public static Long sessId = null;
 	
 	@PostMapping("/login")
-	public ResponseEntity<JwtAuthResponse> createToken(HttpServletRequest req, HttpServletResponse res,@RequestBody JwtAuthRequest request) throws Exception
+	public JwtAuthResponse createToken(HttpServletRequest req, HttpServletResponse res,@RequestBody JwtAuthRequest request) throws Exception
 	{
-		this.authenticate(request.getUsername(),request.getPassword());
-		UserDetails userDetails  = User.withUsername(request.getUsername()).password(request.getPassword()).build();
-//				this.userDetailsService.loadUserByUsername(request.getUsername());
-		String token = this.jwtTokenHelper.generateToken(userDetails);
-		UserDto userData = this.modelMapper.map(this.userRepository.getRoleByContactNo(request.getUsername())
-				.orElseThrow(() -> new ResourceNotFoundException("Username", "Employee ID", request.getUsername())), UserDto.class);
-//		sessionFunction(req,res,userData.getEmployeeId());
-		JwtAuthResponse response = new JwtAuthResponse();
-		response.setRole(userData.getRole());
-		response.setToken(token);
-		response.setUsername(request.getUsername());
-		return new ResponseEntity<>(response, HttpStatus.OK);	
-	}
-	
-	
-	private void authenticate(String username,String password) throws Exception 
-	{	
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,password);
-		try
-		{
-			this.authenticationManager.authenticate(authenticationToken);
-		}					
-		catch (BadCredentialsException e) 
-		{
-			throw new ApiException("Invalid username or password !!");
-		}		
+		authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+				);
+		var user = userRepository.findByContactNo(request.getUsername())
+				.orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo.", request.getUsername()));
+		
+		var jwtToken = jwtTokenService.generateToken(user);
+		return JwtAuthResponse.builder()
+				.token(jwtToken)
+				.role(user.getRole())
+				.username(user.getUsername())
+				.build();  
 	}
 	
 //	public void sessionFunction(HttpServletRequest request, HttpServletResponse response, String username) 

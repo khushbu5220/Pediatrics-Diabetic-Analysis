@@ -16,16 +16,16 @@ import jakarta.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @SuppressWarnings("serial")
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
-@ToString
+@AllArgsConstructor
 @Entity
 @Table(name = "tbl_user")
 public class User implements UserDetails

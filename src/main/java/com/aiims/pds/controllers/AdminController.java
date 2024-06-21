@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aiims.pds.exceptions.ResourceNotFoundException;
 import com.aiims.pds.modals.User;
+import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.services.AdminServices;
@@ -34,8 +35,8 @@ public class AdminController
 	@PostMapping("/superadminregister")
 	public ResponseEntity<UserDto> registerSuperAdminUser(@Valid @RequestBody UserDto userDto)
 	{
-		UserDto registeredUser = this.adminServices.registerSuperAdminUser(userDto);
-		return new ResponseEntity<>(registeredUser,HttpStatus.CREATED);
+		UserDto user = this.adminServices.registerSuperAdminUser(userDto);
+		return new ResponseEntity<>(user,HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/register")

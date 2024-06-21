@@ -3,6 +3,7 @@ package com.aiims.pds.services;
 import java.util.List;
 
 import com.aiims.pds.modals.User;
+import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.UserDto;
 
 import jakarta.validation.Valid;
