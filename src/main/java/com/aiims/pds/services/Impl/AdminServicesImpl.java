@@ -54,34 +54,28 @@ public class AdminServicesImpl implements AdminServices
 	}
 	
 	@Override
-	public UserDto registerNewUser(User user,UserDto userDto) 
+	public UserDto registerNewUser(User addByUser,UserDto userDto) 
 	{
-		User adduser = this.modelMapper.map(userDto, User.class);
-		//status
-		if(userDto.getStatus()!=null) {
-			adduser.setStatus(userDto.getStatus());
-		}else {
-			adduser.setStatus(AppConstants.ACTIVE_USER_STATUS);
-		}
+		var user = User.builder()
+				.contactNo(userDto.getContactNo())
+				.email(userDto.getEmail())
+				.enabled(true)
+				.fullName(userDto.getFullName())
+				.otp(0)
+				.otpSentOn(null)
+				.password(passwordEncoder.encode(userDto.getPassword()))
+				.registeredOn(new Date())
+				.role(userDto.getRole().toUpperCase())
+				.status(AppConstants.ACTIVE_USER_STATUS)
+				.userAddedBy(addByUser)
+				.build();	
 		
-		//enabled user
-		adduser.setEnabled(true);
-		//encoded the password
-		adduser.setPassword(this.passwordEncoder.encode("Aiims@123"));
-		//registered on
-		adduser.setRegisteredOn(new Date());
-		
-		adduser.setRole(userDto.getRole());
-		adduser.setUserAddedBy(user);
-		
-		User saveduser = this.userRepository.save(adduser);
-		return this.modelMapper.map(saveduser, UserDto.class);
+		return this.modelMapper.map(this.userRepository.save(user), UserDto.class);  
 	} 
 
 	@Override
 	public List<UserDto> getUsers() {
-		List<User> getusersList = this.userRepository.findAll();
-		return getusersList.stream().map(u -> this.modelMapper.map(u, UserDto.class)).collect(Collectors.toList());
+		return this.userRepository.findAll().stream().map(u -> this.modelMapper.map(u, UserDto.class)).collect(Collectors.toList());
 	}
 
 //	@Override

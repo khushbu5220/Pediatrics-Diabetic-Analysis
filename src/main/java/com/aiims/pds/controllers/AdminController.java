@@ -49,9 +49,9 @@ public class AdminController
 	}
 	
 	@GetMapping("/dashboard/getUsers")
-	public List<UserDto> getUsers()
+	public ResponseEntity<List<UserDto>> getUsers()
 	{
-		return this.adminServices.getUsers();
+		return new ResponseEntity<>(this.adminServices.getUsers(),HttpStatus.OK);
 	}
 	
 	//update/'change password
