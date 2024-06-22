@@ -29,7 +29,7 @@ public class UserController
 	private UserServices userServices;
 	
 	@PostMapping("/createBaseLine")
-	public ResponseEntity<BaselineDto> createBaseLine(Principal principal, @RequestBody Baseline baseline)
+	public ResponseEntity<BaselineDto> createBaseLine(Principal principal, @RequestBody BaselineDto baseline)
 	{
 		BaselineDto saveBaseline = this.userServices.createBaseline(principal, baseline);
 		return new ResponseEntity<>(saveBaseline, HttpStatus.CREATED);

@@ -12,7 +12,7 @@ import com.aiims.pds.payloads.FamilyHistoryDto;
 
 public interface UserServices {
 
-	BaselineDto createBaseline(Principal principal, Baseline baseline);
+	BaselineDto createBaseline(Principal principal, BaselineDto baseline);
 
 	BaselineDto createFamilyHistory(Principal principal, Long baselineId, FamilyHistory familyHistory);
 

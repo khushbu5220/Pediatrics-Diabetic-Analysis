@@ -50,15 +50,36 @@ public class UserServicesImpl implements UserServices
 	private ModelMapper modelMapper;
 	
 	@Override
-	public BaselineDto createBaseline(Principal principal, Baseline baseline) 
+	public BaselineDto createBaseline(Principal principal, BaselineDto baselineDto) 
 	{
-		String username = principal.getName();
-		User user = this.userRepository.findByContactNo(username).orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo", username));
-		baseline.setUser(user);
-		baseline.setCdt(new Date());
-		baseline.setStatus(AppConstants.ACTIVE_USER_STATUS);
-		Baseline b = this.baselineRepository.save(baseline);
-		return this.modelMapper.map(b, BaselineDto.class);
+		String username = principal.getName();		
+		
+		var baseline = Baseline.builder()
+				.address(baselineDto.getAddress())
+				.age(baselineDto.getAge())
+				.cdt(new Date())
+				.contactNo(baselineDto.getContactNo())
+				.dAge(baselineDto.getDAge())
+				.diagnosis(baselineDto.getDiagnosis())
+				.dkaAtDiagnosis(baselineDto.getDkaAtDiagnosis())
+				.dMonthYear(baselineDto.getDMonthYear())
+				.dob(baselineDto.getDob())
+				.fName(baselineDto.getFName())
+				.fuAge(baselineDto.getFuAge())
+				.fuMonthYear(baselineDto.getFuMonthYear())
+				.gender(baselineDto.getGender())
+				.status(AppConstants.ACTIVE_USER_STATUS)
+				.mName(baselineDto.getMName())
+				.name(baselineDto.getName())
+				.polyDuration(baselineDto.getPolyDuration())
+				.polyuriaPolydipsia(baselineDto.getPolyuriaPolydipsia())
+				.uhid(baselineDto.getUhid())
+				.user(this.userRepository.findByContactNo(username).orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo", username)))
+				.weightLoss(baselineDto.getWeightLoss())
+				.weightlossDuration(baselineDto.getWeightlossDuration())
+				.build();
+				
+		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
 	@Override
