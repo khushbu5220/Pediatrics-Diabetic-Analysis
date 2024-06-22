@@ -19,6 +19,7 @@ import com.aiims.pds.modals.InvestigationTable;
 import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.modals.User;
 import com.aiims.pds.payloads.BaselineDto;
+import com.aiims.pds.payloads.FamilyHistoryDto;
 import com.aiims.pds.repository.BaselineRepository;
 import com.aiims.pds.repository.FamilyhistoryRepository;
 import com.aiims.pds.repository.HbA1cTableRepository;
@@ -83,12 +84,26 @@ public class UserServicesImpl implements UserServices
 	}
 
 	@Override
-	public BaselineDto createFamilyHistory(Principal principal, Long baselineId, FamilyHistory familyHistory) {
-		FamilyHistory savedFamilyHistory = this.familyhistoryRepository.save(familyHistory);
-		Baseline baseline = this.baselineRepository.getOne(baselineId);
-		baseline.setFamilyHistory(savedFamilyHistory);
-		Baseline b = this.baselineRepository.save(baseline);
-		return this.modelMapper.map(b, BaselineDto.class);
+	public BaselineDto createFamilyHistory(Long baselineId, FamilyHistoryDto familyHistoryDto) 
+	{
+		var familyHistory = FamilyHistory.builder()
+				.hBirth(familyHistoryDto.getHBirth())
+				.hBirthRemarks(familyHistoryDto.getHBirthRemarks())
+				.hDevelopment(familyHistoryDto.getHDevelopment())
+				.hDevelopmentRemarks(familyHistoryDto.getHDevelopmentRemarks())
+				.hDiabetesFamily(familyHistoryDto.getHDiabetesFamily())
+				.hDiabetesMGrandparents(familyHistoryDto.getHDiabetesMGrandparents())
+				.hDiabetesParents(familyHistoryDto.getHDiabetesParents())
+				.hDiabetesPGrandparents(familyHistoryDto.getHDiabetesPGrandparents())
+				.hImmunisation(familyHistoryDto.getHImmunisation())
+				.hImmunisationRemarks(familyHistoryDto.getHImmunisationRemarks())
+				.build();
+	
+		var baseline = Baseline.builder()
+		.familyHistory(this.familyhistoryRepository.save(familyHistory))
+		.id(baselineId)
+		.build();
+		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
 	@Override

@@ -45,9 +45,9 @@ public class Baseline
 	private String contactNo;
 	private String address;
 	private int dAge;
-	private LocalDate dMonthYear;
+	private String dMonthYear;
 	private int fuAge;
-	private LocalDate fuMonthYear;
+	private String fuMonthYear;
 	private String polyuriaPolydipsia;
 	private String polyDuration;
 	private String weightLoss;

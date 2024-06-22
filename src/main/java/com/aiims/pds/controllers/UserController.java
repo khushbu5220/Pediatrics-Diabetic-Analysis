@@ -18,6 +18,7 @@ import com.aiims.pds.modals.FollowUp;
 import com.aiims.pds.modals.Investigation;
 import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.payloads.BaselineDto;
+import com.aiims.pds.payloads.FamilyHistoryDto;
 import com.aiims.pds.services.UserServices;
 
 @CrossOrigin("*")
@@ -29,16 +30,15 @@ public class UserController
 	private UserServices userServices;
 	
 	@PostMapping("/createBaseLine")
-	public ResponseEntity<BaselineDto> createBaseLine(Principal principal, @RequestBody BaselineDto baseline)
+	public ResponseEntity<BaselineDto> createBaseLine(Principal principal, @RequestBody BaselineDto baselineDto)
 	{
-		BaselineDto saveBaseline = this.userServices.createBaseline(principal, baseline);
-		return new ResponseEntity<>(saveBaseline, HttpStatus.CREATED);
+		return new ResponseEntity<>(this.userServices.createBaseline(principal, baselineDto), HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/createFamilyHistory")
-	public ResponseEntity<BaselineDto> createFamilyHistory(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody FamilyHistory familyHistory)
+	public ResponseEntity<BaselineDto> createFamilyHistory(@RequestParam(name = "baselineId") Long baselineId, @RequestBody FamilyHistoryDto familyHistoryDto)
 	{
-		BaselineDto baselineDto = this.userServices.createFamilyHistory(principal, baselineId, familyHistory);
+		BaselineDto baselineDto = this.userServices.createFamilyHistory(baselineId, familyHistoryDto);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
