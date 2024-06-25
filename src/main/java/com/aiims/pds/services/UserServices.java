@@ -9,6 +9,7 @@ import com.aiims.pds.modals.Investigation;
 import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
+import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 
 public interface UserServices {
 
@@ -17,7 +18,7 @@ public interface UserServices {
 	BaselineDto createFamilyHistory(Long baselineId, FamilyHistoryDto familyHistoryDto);
 
 	BaselineDto createSocioeconomicHistory(Principal principal, Long baselineId,
-			SocioeconomicHistory socioeconomicHistory);
+			SocioeconomicHistoryDto socioeconomicHistoryDto);
 
 	BaselineDto createInvestigation(Principal principal, Long baselineId, Investigation investigation);
 

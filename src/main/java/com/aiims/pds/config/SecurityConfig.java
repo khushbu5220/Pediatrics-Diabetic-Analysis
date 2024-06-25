@@ -24,12 +24,13 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
     public static final String[] PUBLIC_URLS = {
-//            "/WEB-INF/**", "/views/**", "/login",
+            "/WEB-INF/**", "/views/**", "/login",
             "/admin-action/superadminregister",
-            "/auth/**"
-//            "/swagger-resources/**",
-//            "/swagger-ui/**", "/webjars/**",
-//            "/v3/apis/docs", "/v2/api-docs",
+            "/auth/**",
+            "/swagger-resources/**",
+            "/swagger-ui/**", "/webjars/**",
+            "/v3/apis/docs", "/v2/api-docs"
+//            "/user-action/createBaseLine"
 //            "/chartAnalysis-action/**",
 //            "/system-services/remindersend",
 //            "/index", "/text"

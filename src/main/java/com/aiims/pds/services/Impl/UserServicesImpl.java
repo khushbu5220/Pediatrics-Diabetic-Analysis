@@ -20,6 +20,7 @@ import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.modals.User;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
+import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 import com.aiims.pds.repository.BaselineRepository;
 import com.aiims.pds.repository.FamilyhistoryRepository;
 import com.aiims.pds.repository.HbA1cTableRepository;
@@ -54,7 +55,7 @@ public class UserServicesImpl implements UserServices
 	public BaselineDto createBaseline(Principal principal, BaselineDto baselineDto) 
 	{
 		String username = principal.getName();		
-		
+		User user = this.userRepository.findByContactNo(username).orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo", username));
 		var baseline = Baseline.builder()
 				.address(baselineDto.getAddress())
 				.age(baselineDto.getAge())
@@ -75,7 +76,7 @@ public class UserServicesImpl implements UserServices
 				.polyDuration(baselineDto.getPolyDuration())
 				.polyuriaPolydipsia(baselineDto.getPolyuriaPolydipsia())
 				.uhid(baselineDto.getUhid())
-				.user(this.userRepository.findByContactNo(username).orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo", username)))
+				.user(user)
 				.weightLoss(baselineDto.getWeightLoss())
 				.weightlossDuration(baselineDto.getWeightlossDuration())
 				.build();
@@ -108,12 +109,28 @@ public class UserServicesImpl implements UserServices
 
 	@Override
 	public BaselineDto createSocioeconomicHistory(Principal principal, Long baselineId,
-			SocioeconomicHistory socioeconomicHistory) {
-		SocioeconomicHistory savedSocioeconomicHistory = this.socioeconomicHistoryRepository.save(socioeconomicHistory);
-		Baseline baseline = this.baselineRepository.getOne(baselineId);
-		baseline.setSocioeconomicHistory(savedSocioeconomicHistory);
-		Baseline b = this.baselineRepository.save(baseline);
-		return this.modelMapper.map(b, BaselineDto.class);
+			SocioeconomicHistoryDto socioeconomicHistoryDto) 
+	{
+		var socioeconomicHistory = SocioeconomicHistory.builder()
+				.abhaHolder(socioeconomicHistoryDto.getAbhaHolder())
+				.bplCardHolder(socioeconomicHistoryDto.getBplCardHolder())
+				.cghsGovtscheme(socioeconomicHistoryDto.getCghsGovtscheme())
+				.familyMemberCount(socioeconomicHistoryDto.getFamilyMemberCount())
+				.familyType(socioeconomicHistoryDto.getFamilyType())
+				.fIncome(socioeconomicHistoryDto.getFIncome())
+				.fOccupation(socioeconomicHistoryDto.getFOccupation())
+				.gIncome(socioeconomicHistoryDto.getGIncome())
+				.mIncome(socioeconomicHistoryDto.getMIncome())
+				.mOccupation(socioeconomicHistoryDto.getMOccupation())
+				.remarks(socioeconomicHistoryDto.getRemarks())
+				.build();
+		
+		Baseline baseline = Baseline.builder()
+				.socioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory))
+				.id(baselineId)
+				.build();
+			
+		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
 	@Override

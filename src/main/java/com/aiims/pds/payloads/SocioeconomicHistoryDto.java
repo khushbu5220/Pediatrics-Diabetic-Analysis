@@ -1,10 +1,4 @@
-package com.aiims.pds.modals;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+package com.aiims.pds.payloads;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,12 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name="tbl_socioeconomicHistory")
-public class SocioeconomicHistory 
+public class SocioeconomicHistoryDto 
 {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String fOccupation;
 	private Long fIncome;

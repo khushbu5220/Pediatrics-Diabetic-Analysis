@@ -29,7 +29,7 @@ public class ApplicationConfig
 	public UserDetailsService userDetailsService()
 	{
 		return username -> userRepository.findByContactNo(username)
-				.orElseThrow(() -> new ResourceNotFoundException("User", "Contact No", username));
+				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 	}
 	
 	@Bean

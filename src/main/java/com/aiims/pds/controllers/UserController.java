@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiims.pds.modals.Baseline;
-import com.aiims.pds.modals.FamilyHistory;
 import com.aiims.pds.modals.FollowUp;
 import com.aiims.pds.modals.Investigation;
-import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
+import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 import com.aiims.pds.services.UserServices;
 
 @CrossOrigin("*")
@@ -43,9 +41,9 @@ public class UserController
 	}
 	
 	@PostMapping("/createSocioeconomicHistory")
-	public ResponseEntity<BaselineDto> createSocioeconomicHistory(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody SocioeconomicHistory socioeconomicHistory)
+	public ResponseEntity<BaselineDto> createSocioeconomicHistory(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody SocioeconomicHistoryDto socioeconomicHistoryDto)
 	{
-		BaselineDto baselineDto = this.userServices.createSocioeconomicHistory(principal, baselineId, socioeconomicHistory);
+		BaselineDto baselineDto = this.userServices.createSocioeconomicHistory(principal, baselineId, socioeconomicHistoryDto);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
