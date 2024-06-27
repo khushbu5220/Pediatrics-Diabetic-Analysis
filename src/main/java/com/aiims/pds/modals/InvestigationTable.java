@@ -32,6 +32,6 @@ public class InvestigationTable
 	private LocalDate date;
 	private String values;
 	private String remarks;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
-	private Investigation investigation;
+//	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
+//	private Investigation investigation;
 }

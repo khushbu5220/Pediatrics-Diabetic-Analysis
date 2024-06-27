@@ -52,6 +52,7 @@ public class UserController
 	@PostMapping("/createInvestigation")
 	public ResponseEntity<BaselineDto> createInvestigation(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody Investigation investigation)
 	{
+		System.out.println("investigation : "+investigation.toString());
 		BaselineDto baselineDto = this.userServices.createInvestigation(principal, baselineId, investigation);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}

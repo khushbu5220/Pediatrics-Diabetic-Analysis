@@ -1,34 +1,25 @@
-package com.aiims.pds.modals;
+package com.aiims.pds.payloads;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import com.aiims.pds.modals.HbA1cTable;
+import com.aiims.pds.modals.InvestigationTable;
+
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
-@NoArgsConstructor
+@Data
+@Builder
 @AllArgsConstructor
-@Entity
-@Table(name="tbl_investigation")
-public class Investigation 
+@NoArgsConstructor
+public class InvestigationDto 
 {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private LocalDate cbcDate;
 	private String hb;
@@ -44,8 +35,6 @@ public class Investigation
 	private String sgpt;
 	private String vitd;
 	private String remarks;
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private List<HbA1cTable> hbA1ctable;
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private List<InvestigationTable> investigationTable;
 }
