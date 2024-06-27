@@ -86,24 +86,25 @@ public class UserServicesImpl implements UserServices
 
 	@Override
 	public BaselineDto createFamilyHistory(Long baselineId, FamilyHistoryDto familyHistoryDto) 
-	{
+	{		
 		var familyHistory = FamilyHistory.builder()
-				.hBirth(familyHistoryDto.getHBirth())
-				.hBirthRemarks(familyHistoryDto.getHBirthRemarks())
-				.hDevelopment(familyHistoryDto.getHDevelopment())
-				.hDevelopmentRemarks(familyHistoryDto.getHDevelopmentRemarks())
-				.hDiabetesFamily(familyHistoryDto.getHDiabetesFamily())
-				.hDiabetesMGrandparents(familyHistoryDto.getHDiabetesMGrandparents())
-				.hDiabetesParents(familyHistoryDto.getHDiabetesParents())
-				.hDiabetesPGrandparents(familyHistoryDto.getHDiabetesPGrandparents())
-				.hImmunisation(familyHistoryDto.getHImmunisation())
-				.hImmunisationRemarks(familyHistoryDto.getHImmunisationRemarks())
+				.hBirth(familyHistoryDto.gethBirth())
+				.hBirthRemarks(familyHistoryDto.gethBirthRemarks())
+				.hDevelopment(familyHistoryDto.gethDevelopment())
+				.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
+				.hDiabetesFamily(familyHistoryDto.gethDiabetesFamily())
+				.hDiabetesMGrandparents(familyHistoryDto.gethDiabetesMGrandparents())
+				.hDiabetesParents(familyHistoryDto.gethDiabetesParents())
+				.hDiabetesPGrandparents(familyHistoryDto.gethDiabetesPGrandparents())
+				.hImmunisation(familyHistoryDto.gethImmunisation())
+				.hImmunisationRemarks(familyHistoryDto.gethImmunisationRemarks())
 				.build();
-	
-		var baseline = Baseline.builder()
-		.familyHistory(this.familyhistoryRepository.save(familyHistory))
-		.id(baselineId)
-		.build();
+		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+		System.out.println(familyHistoryDto.toString());
+//		FamilyHistory familyHistory = this.modelMapper.map(familyHistoryDto, FamilyHistory.class);
+//		FamilyHistory savedFamilyHistory = ;
+		baseline.setFamilyHistory(this.familyhistoryRepository.save(familyHistory));
+		
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
@@ -111,24 +112,23 @@ public class UserServicesImpl implements UserServices
 	public BaselineDto createSocioeconomicHistory(Principal principal, Long baselineId,
 			SocioeconomicHistoryDto socioeconomicHistoryDto) 
 	{
+		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+		
 		var socioeconomicHistory = SocioeconomicHistory.builder()
 				.abhaHolder(socioeconomicHistoryDto.getAbhaHolder())
 				.bplCardHolder(socioeconomicHistoryDto.getBplCardHolder())
 				.cghsGovtscheme(socioeconomicHistoryDto.getCghsGovtscheme())
 				.familyMemberCount(socioeconomicHistoryDto.getFamilyMemberCount())
 				.familyType(socioeconomicHistoryDto.getFamilyType())
-				.fIncome(socioeconomicHistoryDto.getFIncome())
-				.fOccupation(socioeconomicHistoryDto.getFOccupation())
-				.gIncome(socioeconomicHistoryDto.getGIncome())
-				.mIncome(socioeconomicHistoryDto.getMIncome())
-				.mOccupation(socioeconomicHistoryDto.getMOccupation())
+				.fIncome(socioeconomicHistoryDto.getfIncome())
+				.fOccupation(socioeconomicHistoryDto.getfOccupation())
+				.gIncome(socioeconomicHistoryDto.getgIncome())
+				.mIncome(socioeconomicHistoryDto.getmIncome())
+				.mOccupation(socioeconomicHistoryDto.getmOccupation())
 				.remarks(socioeconomicHistoryDto.getRemarks())
 				.build();
 		
-		Baseline baseline = Baseline.builder()
-				.socioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory))
-				.id(baselineId)
-				.build();
+		baseline.setSocioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory));
 			
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}

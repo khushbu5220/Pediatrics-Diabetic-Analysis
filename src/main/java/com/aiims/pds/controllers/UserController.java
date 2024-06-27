@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,9 +34,10 @@ public class UserController
 		return new ResponseEntity<>(this.userServices.createBaseline(principal, baselineDto), HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/createFamilyHistory")
-	public ResponseEntity<BaselineDto> createFamilyHistory(@RequestParam(name = "baselineId") Long baselineId, @RequestBody FamilyHistoryDto familyHistoryDto)
+	@PostMapping("/createFamilyHistory/{baselineId}")
+	public ResponseEntity<BaselineDto> createFamilyHistory(@PathVariable("baselineId") Long baselineId, @RequestBody FamilyHistoryDto familyHistoryDto)
 	{
+		System.out.println("Line 39 : " +baselineId +"|"+ familyHistoryDto.toString());
 		BaselineDto baselineDto = this.userServices.createFamilyHistory(baselineId, familyHistoryDto);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
