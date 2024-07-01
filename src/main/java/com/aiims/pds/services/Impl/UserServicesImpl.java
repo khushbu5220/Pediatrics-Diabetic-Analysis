@@ -13,20 +13,32 @@ import com.aiims.pds.exceptions.ResourceNotFoundException;
 import com.aiims.pds.modals.Baseline;
 import com.aiims.pds.modals.FamilyHistory;
 import com.aiims.pds.modals.FollowUp;
+import com.aiims.pds.modals.FootExamination;
+import com.aiims.pds.modals.FundusExamination;
 import com.aiims.pds.modals.HbA1cTable;
 import com.aiims.pds.modals.Investigation;
 import com.aiims.pds.modals.InvestigationTable;
+import com.aiims.pds.modals.LipidProfile;
 import com.aiims.pds.modals.SocioeconomicHistory;
+import com.aiims.pds.modals.ThyroidProfile;
+import com.aiims.pds.modals.UrineAlbuminCreatinineRatio;
 import com.aiims.pds.modals.User;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
+import com.aiims.pds.payloads.FollowUpDto;
 import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 import com.aiims.pds.repository.BaselineRepository;
 import com.aiims.pds.repository.FamilyhistoryRepository;
+import com.aiims.pds.repository.FollowUpRepository;
+import com.aiims.pds.repository.FootExaminationRepository;
+import com.aiims.pds.repository.FundusExaminationRepository;
 import com.aiims.pds.repository.HbA1cTableRepository;
 import com.aiims.pds.repository.InvestigationRepository;
 import com.aiims.pds.repository.InvestigationTableRepository;
+import com.aiims.pds.repository.LipidProfileRepository;
 import com.aiims.pds.repository.SocioeconomicHistoryRepository;
+import com.aiims.pds.repository.ThyroidProfileRepository;
+import com.aiims.pds.repository.UrineAlbuminCreatinineRatioRepository;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.services.UserServices;
 
@@ -48,6 +60,18 @@ public class UserServicesImpl implements UserServices
 	private HbA1cTableRepository hbA1cTableRepository;
 	@Autowired
 	private InvestigationTableRepository investigationTableRepository;
+	@Autowired
+	private ThyroidProfileRepository thyroidProfileRepository;
+	@Autowired
+	private LipidProfileRepository lipidProfileRepository;
+	@Autowired
+	private UrineAlbuminCreatinineRatioRepository urineAlbuminCreatinineRatioRepository;
+	@Autowired
+	private FundusExaminationRepository fundusExaminationRepository;
+	@Autowired
+	private FootExaminationRepository footExaminationRepository;
+	@Autowired
+	private FollowUpRepository followUpRepository;
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -150,9 +174,29 @@ public class UserServicesImpl implements UserServices
 	}
 
 	@Override
-	public BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUp followUp) {
-		// TODO Auto-generated method stub
-		return null;
+	public BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUpDto followUpDto) 
+	{
+		HbA1cTable hbA1cTable = hbA1cTableRepository.save(followUpDto.getHba1ctable());
+		ThyroidProfile thyroidProfile = thyroidProfileRepository.save(followUpDto.getThyroidProfile());
+		LipidProfile lipidProfile = lipidProfileRepository.save(followUpDto.getLipidProfile());
+		UrineAlbuminCreatinineRatio urineAlbuminCreatinineRatio = urineAlbuminCreatinineRatioRepository.save(followUpDto.getUrineAlbuminCreatinineRatio());
+		FundusExamination fundusExamination = fundusExaminationRepository.save(followUpDto.getFundusExamination());
+		FootExamination footExamination = footExaminationRepository.save(followUpDto.getFootExamination());
+		
+		FollowUp followUp = this.modelMapper.map(followUpDto, FollowUp.class);
+		followUp.setFootExamination(footExamination);
+		followUp.setFundusExamination(fundusExamination);
+		followUp.setHba1ctable(hbA1cTable);
+		followUp.setLipidProfile(lipidProfile);
+		followUp.setThyroidProfile(thyroidProfile);
+		followUp.setUrineAlbuminCreatinineRatio(urineAlbuminCreatinineRatio);
+		followUp.setCdt(new Date());
+		followUp.setStatus(AppConstants.ACTIVE_USER_STATUS);
+		FollowUp savedFollowUp = this.followUpRepository.save(followUp);
+		Baseline baseline = this.baselineRepository.getOne(baselineId);
+		baseline.setFollowUps((List<FollowUp>) savedFollowUp);
+		Baseline b = this.baselineRepository.save(baseline);
+		return this.modelMapper.map(b, BaselineDto.class);
 	}
 
 }

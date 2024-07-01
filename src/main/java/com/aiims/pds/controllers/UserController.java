@@ -17,6 +17,7 @@ import com.aiims.pds.modals.FollowUp;
 import com.aiims.pds.modals.Investigation;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
+import com.aiims.pds.payloads.FollowUpDto;
 import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 import com.aiims.pds.services.UserServices;
 
@@ -58,9 +59,9 @@ public class UserController
 	}
 	
 	@PostMapping("/createFollowUp")
-	public ResponseEntity<BaselineDto> createFollowUp(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody FollowUp followUp)
+	public ResponseEntity<BaselineDto> createFollowUp(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody FollowUpDto followUpDto)
 	{
-		BaselineDto baselineDto = this.userServices.createFollowUP(principal, baselineId, followUp);
+		BaselineDto baselineDto = this.userServices.createFollowUP(principal, baselineId, followUpDto);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	

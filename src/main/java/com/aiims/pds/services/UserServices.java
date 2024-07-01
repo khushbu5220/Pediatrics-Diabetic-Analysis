@@ -9,6 +9,7 @@ import com.aiims.pds.modals.Investigation;
 import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
+import com.aiims.pds.payloads.FollowUpDto;
 import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 
 public interface UserServices {
@@ -22,6 +23,6 @@ public interface UserServices {
 
 	BaselineDto createInvestigation(Principal principal, Long baselineId, Investigation investigation);
 
-	BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUp followUp);
+	BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUpDto followUpDto);
 
 }

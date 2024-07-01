@@ -1,44 +1,36 @@
-package com.aiims.pds.modals;
+package com.aiims.pds.payloads;
 
 import java.time.LocalDate;
 import java.util.Date;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.aiims.pds.modals.FootExamination;
+import com.aiims.pds.modals.FundusExamination;
+import com.aiims.pds.modals.HbA1cTable;
+import com.aiims.pds.modals.InvestigationTable;
+import com.aiims.pds.modals.LipidProfile;
+import com.aiims.pds.modals.ThyroidProfile;
+import com.aiims.pds.modals.UrineAlbuminCreatinineRatio;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name="tbl_followup")
-public class FollowUp 
+public class FollowUpDto 
 {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private LocalDate date;
 	private String height;
 	private String weight;
 	private String bp;
-	private String smr;
+	private String smrBreastStage;
+	private String smrPubicHairStage;
 	private String lipodystrophy;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private HbA1cTable hba1ctable;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private ThyroidProfile thyroidProfile;
 	private LocalDate celiacSerologyDate;
 	private String celiacSerologyValue;
@@ -58,13 +50,9 @@ public class FollowUp
 	private String insulinRotation;
 	private String correctionCorrectly;
 	private String diabetesDuration;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private LipidProfile lipidProfile;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private UrineAlbuminCreatinineRatio urineAlbuminCreatinineRatio;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private FundusExamination fundusExamination;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private FootExamination footExamination;
 	private String remarks;
 	private String status;
