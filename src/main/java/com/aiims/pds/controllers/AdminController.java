@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aiims.pds.exceptions.ResourceNotFoundException;
 import com.aiims.pds.modals.User;
+import com.aiims.pds.payloads.ChangePassKey;
 import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.UserDto;
 import com.aiims.pds.repository.UserRepository;
@@ -54,17 +55,26 @@ public class AdminController
 		return new ResponseEntity<>(this.adminServices.getUsers(),HttpStatus.OK);
 	}
 	
+	@PostMapping("/updateUser")
+	public ResponseEntity<UserDto> updateUser(Principal principal, @Valid @RequestBody UserDto userDto)
+	{
+		String contactNo = principal.getName();
+		User user = this.userRepository.findByContactNo(contactNo).orElseThrow(() -> new ResourceNotFoundException("Username", "contactNo", contactNo));
+		UserDto updateUser = this.adminServices.updateUser(user, userDto);
+		return new ResponseEntity<>(updateUser,HttpStatus.CREATED);
+	}
+	
 	//update/'change password
-//	@PostMapping("/changePassword")
-//	public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePassKey password,Principal principal){
-//		try 
-//		{
-//			String changePassword = this.adminServices.changeUserPassword(password,principal);
-//			return new ResponseEntity<>(changePassword,HttpStatus.OK);				
-//		} 
-//		catch (Exception e) 
-//		{
-//			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
+	@PostMapping("/changePassword")
+	public ResponseEntity<Object> changePassword(@Valid @RequestBody ChangePassKey password,Principal principal){
+		try 
+		{
+			String changePassword = this.adminServices.changeUserPassword(password,principal);
+			return new ResponseEntity<>(changePassword,HttpStatus.OK);				
+		} 
+		catch (Exception e) 
+		{
+			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 }

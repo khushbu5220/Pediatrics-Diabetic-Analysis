@@ -94,7 +94,7 @@ public class UserServicesImpl implements UserServices
 				.fuAge(baselineDto.getFuAge())
 				.fuMonthYear(baselineDto.getFuMonthYear())
 				.gender(baselineDto.getGender())
-				.status(AppConstants.ACTIVE_USER_STATUS)
+				.status(baselineDto.getStatus())
 				.mName(baselineDto.getmName())
 				.name(baselineDto.getName())
 				.polyDuration(baselineDto.getPolyDuration())
@@ -197,6 +197,13 @@ public class UserServicesImpl implements UserServices
 		baseline.setFollowUps((List<FollowUp>) savedFollowUp);
 		Baseline b = this.baselineRepository.save(baseline);
 		return this.modelMapper.map(b, BaselineDto.class);
+	}
+	
+	@Override
+	public BaselineDto getBaseline(Principal principal, Long baselineId) 
+	{		
+		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+		return this.modelMapper.map(baseline, BaselineDto.class);
 	}
 
 }

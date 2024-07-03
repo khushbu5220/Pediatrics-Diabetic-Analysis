@@ -43,6 +43,7 @@ public class BaselineDto
 	private SocioeconomicHistory socioeconomicHistory;
 	private Investigation investigation;
 	private List<FollowUp> followUps;
+	private String status;
 	public Long getId() {
 		return id;
 	}
@@ -192,5 +193,11 @@ public class BaselineDto
 	}
 	public void setFollowUps(List<FollowUp> followUps) {
 		this.followUps = followUps;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

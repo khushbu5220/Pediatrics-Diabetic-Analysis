@@ -25,4 +25,6 @@ public interface UserServices {
 
 	BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUpDto followUpDto);
 
+	BaselineDto getBaseline(Principal principal, Long baselineId);
+
 }

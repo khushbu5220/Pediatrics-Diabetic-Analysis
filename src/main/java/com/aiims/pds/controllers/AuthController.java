@@ -18,15 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.aiims.pds.exceptions.ApiException;
 import com.aiims.pds.exceptions.ResourceNotFoundException;
+import com.aiims.pds.payloads.EmployeeRequest;
 import com.aiims.pds.payloads.JwtAuthRequest;
 import com.aiims.pds.payloads.JwtAuthResponse;
+import com.aiims.pds.payloads.OtpRequest;
+import com.aiims.pds.payloads.PassKeyRequest;
 import com.aiims.pds.payloads.UserDto;
+import com.aiims.pds.payloads.UserResponse;
+import com.aiims.pds.payloads.UserResponse;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.security.JwtTokenService;
+import com.aiims.pds.services.AdminServices;
 import com.aiims.pds.security.JwtTokenService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @CrossOrigin("*")
@@ -37,6 +44,8 @@ public class AuthController {
 
 	@Autowired
 	private JwtTokenService jwtTokenService;
+	@Autowired
+	private AdminServices adminServices;
 	@Autowired
 	private UserDetailsService userDetailsService;
 	@Autowired
@@ -79,48 +88,48 @@ public class AuthController {
 //		
 //	}
 //	
-//	//register new user 
-//	@PostMapping("/forgetPassword")
-//	public ResponseEntity<Object> forgetUserPassword(@Valid @RequestBody EmployeeRequest user)
-//	{
-//		try 
-//		{
-//			UserResponse forgetUserPassword = this.adminServices.forgetUserPassword(user);
-//			return new ResponseEntity<>(forgetUserPassword,HttpStatus.OK);				
-//		} 
-//		catch (Exception e) 
-//		{
-//			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
-//	@PostMapping("/verifyOtp")
-//	public ResponseEntity<Object> verifyOtp(@Valid @RequestBody OtpRequest user){
-//		try 
-//		{
-//			UserResponse verifyOtp = this.adminServices.VerifyOtp(user);
-//			return new ResponseEntity<>(verifyOtp,HttpStatus.OK);				
-//		} 
-//		catch (Exception e) 
-//		{
-//			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
-//	@PostMapping("/updatePassword")
-//	public ResponseEntity<Object> updatePassword(@Valid @RequestBody PassKeyRequest user)
-//	{
-//		try 
-//		{
-//			UserResponse updatePassword = this.adminServices.updatePassword(user);
-//			return new ResponseEntity<>(updatePassword,HttpStatus.OK);				
-//		} 
-//		catch (Exception e) 
-//		{
-//			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-//	}
-//	
+	//register new user 
+	@PostMapping("/forgetPassword")
+	public ResponseEntity<Object> forgetUserPassword(@Valid @RequestBody EmployeeRequest user)
+	{
+		try 
+		{
+			UserResponse forgetUserPassword = this.adminServices.forgetUserPassword(user);
+			return new ResponseEntity<>(forgetUserPassword,HttpStatus.OK);				
+		} 
+		catch (Exception e) 
+		{
+			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping("/verifyOtp")
+	public ResponseEntity<Object> verifyOtp(@Valid @RequestBody OtpRequest user){
+		try 
+		{
+			UserResponse verifyOtp = this.adminServices.VerifyOtp(user);
+			return new ResponseEntity<>(verifyOtp,HttpStatus.OK);				
+		} 
+		catch (Exception e) 
+		{
+			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping("/updatePassword")
+	public ResponseEntity<Object> updatePassword(@Valid @RequestBody PassKeyRequest user)
+	{
+		try 
+		{
+			UserResponse updatePassword = this.adminServices.updatePassword(user);
+			return new ResponseEntity<>(updatePassword,HttpStatus.OK);				
+		} 
+		catch (Exception e) 
+		{
+			return new ResponseEntity<>(e,HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 //	@GetMapping("/getUser/{empId}")
 //	public UserDto getUser(@PathVariable("empId") String empId)
 //	{

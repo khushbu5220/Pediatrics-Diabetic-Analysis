@@ -2,7 +2,6 @@ package com.aiims.pds.payloads;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Builder
