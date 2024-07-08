@@ -21,9 +21,12 @@ public class FamilyHistory
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String hDiabetesParents;
-	private String hDiabetesMGrandparents;
-	private String hDiabetesPGrandparents;
+	private String hDiabetesMother;
+	private String hDiabetesFather;
+	private String hDiabetesMGrandMother;
+	private String hDiabetesMGrandFather;
+	private String hDiabetesFGrandMother;
+	private String hDiabetesFGrandFather;
 	private String hDiabetesFamily;
 	private String hBirth;
 	private String hBirthRemarks;

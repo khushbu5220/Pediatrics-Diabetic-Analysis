@@ -1,9 +1,17 @@
 package com.aiims.pds.services.Impl;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +49,9 @@ import com.aiims.pds.repository.ThyroidProfileRepository;
 import com.aiims.pds.repository.UrineAlbuminCreatinineRatioRepository;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.services.UserServices;
+
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 @SuppressWarnings("deprecation")
 @Service
@@ -117,9 +128,12 @@ public class UserServicesImpl implements UserServices
 				.hDevelopment(familyHistoryDto.gethDevelopment())
 				.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
 				.hDiabetesFamily(familyHistoryDto.gethDiabetesFamily())
-				.hDiabetesMGrandparents(familyHistoryDto.gethDiabetesMGrandparents())
-				.hDiabetesParents(familyHistoryDto.gethDiabetesParents())
-				.hDiabetesPGrandparents(familyHistoryDto.gethDiabetesPGrandparents())
+				.hDiabetesMGrandMother(familyHistoryDto.gethDiabetesMGrandMother())
+				.hDiabetesMGrandFather(familyHistoryDto.gethDiabetesMGrandFather())
+				.hDiabetesMother(familyHistoryDto.gethDiabetesMother())
+				.hDiabetesFather(familyHistoryDto.gethDiabetesFather())
+				.hDiabetesFGrandMother(familyHistoryDto.gethDiabetesFGrandMother())
+				.hDiabetesFGrandFather(familyHistoryDto.gethDiabetesFGrandFather())
 				.hImmunisation(familyHistoryDto.gethImmunisation())
 				.hImmunisationRemarks(familyHistoryDto.gethImmunisationRemarks())
 				.build();
@@ -200,10 +214,151 @@ public class UserServicesImpl implements UserServices
 	}
 	
 	@Override
-	public BaselineDto getBaseline(Principal principal, Long baselineId) 
+	public BaselineDto getBaseline(Principal principal, Long baselineId)  
 	{		
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
 		return this.modelMapper.map(baseline, BaselineDto.class);
+	}
+
+	@Override
+	public void generatePatientXLS(HttpServletResponse response, BaselineDto baselineDto) throws IOException 
+	{
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet = workbook.createSheet("Diabetes Registry of "+baselineDto.getUhid());
+		HSSFRow headerRow = sheet.createRow(0);
+		Cell cell = headerRow.createCell(0);
+		cell.setCellValue("Baseline Details of "+ baselineDto.getfName()+" ("+baselineDto.getUhid()+")");
+		cell.getCellStyle().setAlignment(HorizontalAlignment.CENTER);
+		sheet.addMergedRegion(new CellRangeAddress(0,0,0,46)); 
+		sheet.autoSizeColumn(0);
+
+		HSSFRow row = sheet.createRow(2);
+		row.createCell(0).setCellValue("S.No.");
+		row.createCell(1).setCellValue("Name");
+		row.createCell(2).setCellValue("UHID");
+		row.createCell(3).setCellValue("Age");
+		row.createCell(4).setCellValue("Sex");
+		row.createCell(5).setCellValue("Diagnosis");
+		row.createCell(6).setCellValue("DOB");
+		row.createCell(7).setCellValue("Father's Name");
+		row.createCell(8).setCellValue("Mother's Name");
+		row.createCell(9).setCellValue("Contact No.");
+		row.createCell(10).setCellValue("Address");
+		row.createCell(11).setCellValue("Age of Diagnosis");
+		row.createCell(12).setCellValue("Month and Year of Diagnosis");
+		row.createCell(13).setCellValue("Since when following up in AIIMS");
+		row.createCell(14).setCellValue("Presenting Complaint at Diagnosis");
+		row.createCell(15).setCellValue("DKA at Diagnosis(Y/N)");
+		row.createCell(16).setCellValue("Family History of Diabetes");
+		row.createCell(17).setCellValue("History of Diabetes in Mother(Y/N)");
+		row.createCell(18).setCellValue("History of Diabetes in Father(Y/N)");
+		row.createCell(19).setCellValue("History of Diabetes in Grandmother(Y/N)");
+		row.createCell(20).setCellValue("History of Diabetes in Grandfather(Y/N)");
+		row.createCell(21).setCellValue("Birth History");
+		row.createCell(22).setCellValue("Development History");
+		row.createCell(23).setCellValue("Immunisation History(complete/incomplete)");
+		row.createCell(24).setCellValue("Socioeconomic History");
+		row.createCell(25).setCellValue("Examination");
+		row.createCell(26).setCellValue("Investigations");
+		row.createCell(27).setCellValue("Hb");
+		row.createCell(28).setCellValue("TLC");
+		row.createCell(29).setCellValue("Platelets");
+		row.createCell(30).setCellValue("Ur");
+		row.createCell(31).setCellValue("Cr");
+		row.createCell(32).setCellValue("Ca");
+		row.createCell(33).setCellValue("Phosphate");
+		row.createCell(34).setCellValue("ALP");
+		row.createCell(35).setCellValue("SGOT");
+		row.createCell(36).setCellValue("SGPT");
+		row.createCell(37).setCellValue("Vit D");
+		row.createCell(38).setCellValue("HbA1c");
+		row.createCell(39).setCellValue("Celiac Serology");
+		row.createCell(40).setCellValue("Urine Albumin/Cr ratio");
+		row.createCell(41).setCellValue("Fundus Examination");
+		row.createCell(42).setCellValue("Foot Examination");
+		row.createCell(43).setCellValue("LDL");
+		row.createCell(44).setCellValue("HDL");
+		row.createCell(45).setCellValue("TC");
+		row.createCell(46).setCellValue("TG");
+		
+		int dataRowIndex = 3;
+
+		HSSFRow dataRow = sheet.createRow(dataRowIndex);
+		dataRow.createCell(0).setCellValue("1");
+		dataRow.createCell(1).setCellValue(baselineDto.getName());
+		dataRow.createCell(2).setCellValue(String.valueOf(baselineDto.getUhid()));
+		dataRow.createCell(3).setCellValue(baselineDto.getAge());
+		dataRow.createCell(4).setCellValue(baselineDto.getGender());
+		dataRow.createCell(5).setCellValue(baselineDto.getDiagnosis());
+		dataRow.createCell(6).setCellValue(String.valueOf(baselineDto.getDob()));
+		dataRow.createCell(7).setCellValue(baselineDto.getfName());
+		dataRow.createCell(8).setCellValue(baselineDto.getmName());
+		dataRow.createCell(9).setCellValue(baselineDto.getContactNo());
+		dataRow.createCell(10).setCellValue(baselineDto.getAddress());
+		dataRow.createCell(11).setCellValue(baselineDto.getdAge());
+		dataRow.createCell(12).setCellValue(baselineDto.getdMonthYear());
+		dataRow.createCell(13).setCellValue(baselineDto.getFuMonthYear()+" "+String.valueOf(baselineDto.getFuAge()));
+		dataRow.createCell(14).setCellValue("");
+		dataRow.createCell(15).setCellValue(baselineDto.getDkaAtDiagnosis());
+		dataRow.createCell(16).setCellValue("");
+		dataRow.createCell(17).setCellValue(baselineDto.getFamilyHistory().getHDiabetesFamily());
+		dataRow.createCell(18).setCellValue(baselineDto.getFamilyHistory().getHDiabetesMother());
+		dataRow.createCell(19).setCellValue(baselineDto.getFamilyHistory().getHDiabetesFather());
+		dataRow.createCell(20).setCellValue(("yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesMGrandMother()) || "yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesFGrandMother())) ? "Yes" : "No");
+		dataRow.createCell(21).setCellValue(("yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesMGrandFather()) || "yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesFGrandFather())) ? "Yes" : "No");
+		dataRow.createCell(22).setCellValue(baselineDto.getFamilyHistory().getHBirth());
+		dataRow.createCell(23).setCellValue(baselineDto.getFamilyHistory().getHDevelopment());
+		dataRow.createCell(24).setCellValue(baselineDto.getFamilyHistory().getHImmunisation());
+		dataRow.createCell(25).setCellValue("");
+		dataRow.createCell(26).setCellValue(baselineDto.getSocioeconomicHistory().getRemarks());
+		dataRow.createCell(27).setCellValue("");
+		dataRow.createCell(28).setCellValue(baselineDto.getInvestigation().getHb());
+		dataRow.createCell(29).setCellValue(baselineDto.getInvestigation().getTlc());
+		dataRow.createCell(30).setCellValue(baselineDto.getInvestigation().getPlatelets());
+		dataRow.createCell(31).setCellValue(baselineDto.getInvestigation().getUrea());
+		dataRow.createCell(32).setCellValue(baselineDto.getInvestigation().getCreatinine());
+		dataRow.createCell(33).setCellValue(baselineDto.getInvestigation().getCalcium());
+		dataRow.createCell(34).setCellValue(baselineDto.getInvestigation().getPhosphate());
+		dataRow.createCell(35).setCellValue(baselineDto.getInvestigation().getAlp());
+		dataRow.createCell(36).setCellValue(baselineDto.getInvestigation().getSgot());
+		dataRow.createCell(37).setCellValue(baselineDto.getInvestigation().getSgpt());
+		dataRow.createCell(38).setCellValue(baselineDto.getInvestigation().getVitd());
+		dataRow.createCell(39).setCellValue(baselineDto.getInvestigation().getHbA1ctable().toString());
+		dataRow.createCell(40).setCellValue("baselineDto.getInvestigation().getInvestigationTable()");
+		dataRow.createCell(41).setCellValue(baselineDto.getName());
+		dataRow.createCell(42).setCellValue(baselineDto.getUhid());
+		dataRow.createCell(43).setCellValue(baselineDto.getName());
+		dataRow.createCell(44).setCellValue(baselineDto.getUhid());
+		dataRow.createCell(45).setCellValue(baselineDto.getName());
+		dataRow.createCell(46).setCellValue(baselineDto.getUhid());
+		
+		HSSFRow row1 = sheet.createRow(6);
+		row1.createCell(0).setCellValue("Follow Up Visit");
+		row1.createCell(1).setCellValue("Name");
+		row1.createCell(2).setCellValue("UHID");
+		row1.createCell(3).setCellValue("Age");
+		row1.createCell(4).setCellValue("Sex");
+		row1.createCell(5).setCellValue("Weight");
+		row1.createCell(6).setCellValue("Height");
+		row1.createCell(7).setCellValue("BP");
+		row1.createCell(8).setCellValue("SMR");
+		row1.createCell(9).setCellValue("Lipodystrophy");
+		row1.createCell(10).setCellValue("HbA1c");
+		row1.createCell(11).setCellValue("T3");
+		row1.createCell(12).setCellValue("T4");
+		row1.createCell(13).setCellValue("TSH");
+		row1.createCell(14).setCellValue("FT4");
+		row1.createCell(15).setCellValue("Celiac Serology");
+		row1.createCell(16).setCellValue("Date of Last Visit in the Multidisciplinary Clinic");
+		row1.createCell(17).setCellValue("Insulin Dose written or not");
+		row1.createCell(18).setCellValue("Total Daily Dose of Insulin");
+		row1.createCell(19).setCellValue("Basal Insulin Dose");
+		row1.createCell(20).setCellValue("Bolus Insulin Dose");
+		
+		ServletOutputStream os = response.getOutputStream();
+		workbook.write(os);
+		workbook.close();
+		os.close();
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.aiims.pds.services;
 
+import java.io.IOException;
 import java.security.Principal;
 
 import com.aiims.pds.modals.Baseline;
@@ -11,6 +12,8 @@ import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
 import com.aiims.pds.payloads.FollowUpDto;
 import com.aiims.pds.payloads.SocioeconomicHistoryDto;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserServices {
 
@@ -27,4 +30,5 @@ public interface UserServices {
 
 	BaselineDto getBaseline(Principal principal, Long baselineId);
 
+	void generatePatientXLS(HttpServletResponse response, BaselineDto baselineDto) throws IOException;
 }

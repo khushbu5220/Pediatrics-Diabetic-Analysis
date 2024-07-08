@@ -1,5 +1,6 @@
 package com.aiims.pds.controllers;
 
+import java.io.IOException;
 import java.security.Principal;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import com.aiims.pds.payloads.FamilyHistoryDto;
 import com.aiims.pds.payloads.FollowUpDto;
 import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 import com.aiims.pds.services.UserServices;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @CrossOrigin("*")
 @RestController
@@ -70,8 +73,17 @@ public class UserController
 	public ResponseEntity<BaselineDto> getBaseline(Principal principal, @RequestParam("baselineId") Long baselineId)
 	{
 		BaselineDto baselineDto = this.userServices.getBaseline(principal, baselineId);
-		return  new ResponseEntity<>(baselineDto, HttpStatus.OK);
+		return new ResponseEntity<>(baselineDto, HttpStatus.OK);
 	}
 	
-	
+	@GetMapping("/getXLSPatient")
+	public void getXLSPatient(Principal principal, HttpServletResponse response, @RequestParam("baselineId") Long baselineId) throws IOException
+	{
+		BaselineDto baselineDto = this.userServices.getBaseline(principal, baselineId);
+		response.setContentType("application/octet-stream");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment;filename=courses.xls";
+		response.setHeader(headerKey, headerValue);
+		this.userServices.generatePatientXLS(response, baselineDto);
+	}
 }

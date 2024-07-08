@@ -13,9 +13,12 @@ import lombok.ToString;
 public class FamilyHistoryDto 
 {
 	private Long id;
-	private String hDiabetesParents;
-	private String hDiabetesMGrandparents;
-	private String hDiabetesPGrandparents;
+	private String hDiabetesMother;
+	private String hDiabetesFather;
+	private String hDiabetesMGrandMother;
+	private String hDiabetesMGrandFather;
+	private String hDiabetesFGrandMother;
+	private String hDiabetesFGrandFather;
 	private String hDiabetesFamily;
 	private String hBirth;
 	private String hBirthRemarks;
@@ -23,24 +26,7 @@ public class FamilyHistoryDto
 	private String hDevelopmentRemarks;
 	private String hImmunisation;
 	private String hImmunisationRemarks;
-	public String gethDiabetesParents() {
-		return hDiabetesParents;
-	}
-	public void sethDiabetesParents(String hDiabetesParents) {
-		this.hDiabetesParents = hDiabetesParents;
-	}
-	public String gethDiabetesMGrandparents() {
-		return hDiabetesMGrandparents;
-	}
-	public void sethDiabetesMGrandparents(String hDiabetesMGrandparents) {
-		this.hDiabetesMGrandparents = hDiabetesMGrandparents;
-	}
-	public String gethDiabetesPGrandparents() {
-		return hDiabetesPGrandparents;
-	}
-	public void sethDiabetesPGrandparents(String hDiabetesPGrandparents) {
-		this.hDiabetesPGrandparents = hDiabetesPGrandparents;
-	}
+	
 	public String gethDiabetesFamily() {
 		return hDiabetesFamily;
 	}
@@ -82,5 +68,47 @@ public class FamilyHistoryDto
 	}
 	public void sethImmunisationRemarks(String hImmunisationRemarks) {
 		this.hImmunisationRemarks = hImmunisationRemarks;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String gethDiabetesMother() {
+		return hDiabetesMother;
+	}
+	public void sethDiabetesMother(String hDiabetesMother) {
+		this.hDiabetesMother = hDiabetesMother;
+	}
+	public String gethDiabetesFather() {
+		return hDiabetesFather;
+	}
+	public void sethDiabetesFather(String hDiabetesFather) {
+		this.hDiabetesFather = hDiabetesFather;
+	}
+	public String gethDiabetesMGrandMother() {
+		return hDiabetesMGrandMother;
+	}
+	public void sethDiabetesMGrandMother(String hDiabetesMGrandMother) {
+		this.hDiabetesMGrandMother = hDiabetesMGrandMother;
+	}
+	public String gethDiabetesMGrandFather() {
+		return hDiabetesMGrandFather;
+	}
+	public void sethDiabetesMGrandFather(String hDiabetesMGrandFather) {
+		this.hDiabetesMGrandFather = hDiabetesMGrandFather;
+	}
+	public String gethDiabetesFGrandMother() {
+		return hDiabetesFGrandMother;
+	}
+	public void sethDiabetesFGrandMother(String hDiabetesFGrandMother) {
+		this.hDiabetesFGrandMother = hDiabetesFGrandMother;
+	}
+	public String gethDiabetesFGrandFather() {
+		return hDiabetesFGrandFather;
+	}
+	public void sethDiabetesFGrandFather(String hDiabetesFGrandFather) {
+		this.hDiabetesFGrandFather = hDiabetesFGrandFather;
 	}
 }
