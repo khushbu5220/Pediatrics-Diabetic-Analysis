@@ -2,6 +2,7 @@ package com.aiims.pds.controllers;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,6 +70,13 @@ public class UserController
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
+	@PostMapping("/submitBaseline")
+	public ResponseEntity<BaselineDto> submitBaseline(Principal principal, @RequestParam(name = "baselineId") Long baselineId)
+	{
+		BaselineDto baselineDto = this.userServices.submitBaseline(principal, baselineId);
+		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
+	}
+	
 	@GetMapping("/getBaseline")
 	public ResponseEntity<BaselineDto> getBaseline(Principal principal, @RequestParam("baselineId") Long baselineId)
 	{
@@ -82,7 +90,7 @@ public class UserController
 		BaselineDto baselineDto = this.userServices.getBaseline(principal, baselineId);
 		response.setContentType("application/octet-stream");
 		String headerKey = "Content-Disposition";
-		String headerValue = "attachment;filename=courses.xls";
+		String headerValue = "attachment;filename="+baselineDto.getUhid()+"-DiabetesRegistry.xls";
 		response.setHeader(headerKey, headerValue);
 		this.userServices.generatePatientXLS(response, baselineDto);
 	}

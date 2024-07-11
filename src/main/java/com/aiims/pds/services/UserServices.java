@@ -31,4 +31,6 @@ public interface UserServices {
 	BaselineDto getBaseline(Principal principal, Long baselineId);
 
 	void generatePatientXLS(HttpServletResponse response, BaselineDto baselineDto) throws IOException;
+
+	BaselineDto submitBaseline(Principal principal, Long baselineId);
 }
