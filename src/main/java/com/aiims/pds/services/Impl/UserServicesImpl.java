@@ -126,7 +126,10 @@ public class UserServicesImpl implements UserServices
 	public BaselineDto createFamilyHistory(Long baselineId, FamilyHistoryDto familyHistoryDto) 
 	{		
 		var familyHistory = FamilyHistory.builder()
-				.hBirth(familyHistoryDto.gethBirth())
+				.hBirthBW(familyHistoryDto.gethBirthBW())
+				.hBirthcry(familyHistoryDto.gethBirthcry())
+				.hBirthdelivery(familyHistoryDto.gethBirthdelivery())
+				.hBirthTerm(familyHistoryDto.gethBirthTerm())
 				.hBirthRemarks(familyHistoryDto.gethBirthRemarks())
 				.hDevelopment(familyHistoryDto.gethDevelopment())
 				.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
@@ -333,7 +336,7 @@ public class UserServicesImpl implements UserServices
 			dataRow.createCell(19).setCellValue(baselineDto.getFamilyHistory().getHDiabetesFather());
 			dataRow.createCell(20).setCellValue(("yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesMGrandMother()) || "yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesFGrandMother())) ? "Yes" : "No");
 			dataRow.createCell(21).setCellValue(("yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesMGrandFather()) || "yes".equalsIgnoreCase(baselineDto.getFamilyHistory().getHDiabetesFGrandFather())) ? "Yes" : "No");
-			dataRow.createCell(22).setCellValue(baselineDto.getFamilyHistory().getHBirth());
+			dataRow.createCell(22).setCellValue(baselineDto.getFamilyHistory().getHBirthTerm()+", "+baselineDto.getFamilyHistory().getHBirthdelivery()+", "+baselineDto.getFamilyHistory().getHBirthBW()+", "+baselineDto.getFamilyHistory().getHBirthcry());
 			dataRow.createCell(23).setCellValue(baselineDto.getFamilyHistory().getHDevelopment());
 			dataRow.createCell(24).setCellValue(baselineDto.getFamilyHistory().getHImmunisation());
 			dataRow.createCell(25).setCellValue("");

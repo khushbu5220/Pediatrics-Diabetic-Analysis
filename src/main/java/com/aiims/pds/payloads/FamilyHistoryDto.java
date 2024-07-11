@@ -20,7 +20,10 @@ public class FamilyHistoryDto
 	private String hDiabetesFGrandMother;
 	private String hDiabetesFGrandFather;
 	private String hDiabetesFamily;
-	private String hBirth;
+	private String hBirthTerm;
+	private String hBirthdelivery;
+	private String hBirthBW;
+	private String hBirthcry;
 	private String hBirthRemarks;
 	private String hDevelopment;
 	private String hDevelopmentRemarks;
@@ -32,12 +35,6 @@ public class FamilyHistoryDto
 	}
 	public void sethDiabetesFamily(String hDiabetesFamily) {
 		this.hDiabetesFamily = hDiabetesFamily;
-	}
-	public String gethBirth() {
-		return hBirth;
-	}
-	public void sethBirth(String hBirth) {
-		this.hBirth = hBirth;
 	}
 	public String gethBirthRemarks() {
 		return hBirthRemarks;
@@ -110,5 +107,29 @@ public class FamilyHistoryDto
 	}
 	public void sethDiabetesFGrandFather(String hDiabetesFGrandFather) {
 		this.hDiabetesFGrandFather = hDiabetesFGrandFather;
+	}
+	public String gethBirthTerm() {
+		return hBirthTerm;
+	}
+	public void sethBirthTerm(String hBirthTerm) {
+		this.hBirthTerm = hBirthTerm;
+	}
+	public String gethBirthdelivery() {
+		return hBirthdelivery;
+	}
+	public void sethBirthdelivery(String hBirthdelivery) {
+		this.hBirthdelivery = hBirthdelivery;
+	}
+	public String gethBirthBW() {
+		return hBirthBW;
+	}
+	public void sethBirthBW(String hBirthBW) {
+		this.hBirthBW = hBirthBW;
+	}
+	public String gethBirthcry() {
+		return hBirthcry;
+	}
+	public void sethBirthcry(String hBirthcry) {
+		this.hBirthcry = hBirthcry;
 	}
 }

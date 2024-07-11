@@ -28,7 +28,10 @@ public class FamilyHistory
 	private String hDiabetesFGrandMother;
 	private String hDiabetesFGrandFather;
 	private String hDiabetesFamily;
-	private String hBirth;
+	private String hBirthTerm;
+	private String hBirthdelivery;
+	private String hBirthBW;
+	private String hBirthcry;
 	private String hBirthRemarks;
 	private String hDevelopment;
 	private String hDevelopmentRemarks;
