@@ -48,44 +48,44 @@ public class UserController
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/createSocioeconomicHistory")
-	public ResponseEntity<BaselineDto> createSocioeconomicHistory(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody SocioeconomicHistoryDto socioeconomicHistoryDto)
+	@PostMapping("/createSocioeconomicHistory/{baselineId}")
+	public ResponseEntity<BaselineDto> createSocioeconomicHistory(Principal principal, @PathVariable("baselineId") Long baselineId, @RequestBody SocioeconomicHistoryDto socioeconomicHistoryDto)
 	{
 		BaselineDto baselineDto = this.userServices.createSocioeconomicHistory(principal, baselineId, socioeconomicHistoryDto);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/createInvestigation")
-	public ResponseEntity<BaselineDto> createInvestigation(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody Investigation investigation)
+	@PostMapping("/createInvestigation/{baselineId}")
+	public ResponseEntity<BaselineDto> createInvestigation(Principal principal, @PathVariable("baselineId") Long baselineId, @RequestBody Investigation investigation)
 	{
 		System.out.println("investigation : "+investigation.toString());
 		BaselineDto baselineDto = this.userServices.createInvestigation(principal, baselineId, investigation);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/createFollowUp")
-	public ResponseEntity<BaselineDto> createFollowUp(Principal principal, @RequestParam(name = "baselineId") Long baselineId, @RequestBody FollowUpDto followUpDto)
+	@PostMapping("/createFollowUp/{baselineId}")
+	public ResponseEntity<BaselineDto> createFollowUp(Principal principal, @PathVariable("baselineId") Long baselineId, @RequestBody FollowUpDto followUpDto)
 	{
 		BaselineDto baselineDto = this.userServices.createFollowUP(principal, baselineId, followUpDto);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/submitBaseline")
-	public ResponseEntity<BaselineDto> submitBaseline(Principal principal, @RequestParam(name = "baselineId") Long baselineId)
+	@PostMapping("/submitBaseline/{baselineId}")
+	public ResponseEntity<BaselineDto> submitBaseline(Principal principal, @PathVariable("baselineId") Long baselineId)
 	{
 		BaselineDto baselineDto = this.userServices.submitBaseline(principal, baselineId);
 		return new ResponseEntity<>(baselineDto, HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/getBaseline")
-	public ResponseEntity<BaselineDto> getBaseline(Principal principal, @RequestParam("baselineId") Long baselineId)
+	@GetMapping("/getBaseline/{baselineId}")
+	public ResponseEntity<BaselineDto> getBaseline(Principal principal, @PathVariable("baselineId") Long baselineId)
 	{
 		BaselineDto baselineDto = this.userServices.getBaseline(principal, baselineId);
 		return new ResponseEntity<>(baselineDto, HttpStatus.OK);
 	}
 	
-	@GetMapping("/getXLSPatient")
-	public void getXLSPatient(Principal principal, HttpServletResponse response, @RequestParam("baselineId") Long baselineId) throws IOException
+	@GetMapping("/getXLSPatient/{baselineId}")
+	public void getXLSPatient(Principal principal, HttpServletResponse response, @PathVariable("baselineId") Long baselineId) throws IOException
 	{
 		BaselineDto baselineDto = this.userServices.getBaseline(principal, baselineId);
 		response.setContentType("application/octet-stream");
