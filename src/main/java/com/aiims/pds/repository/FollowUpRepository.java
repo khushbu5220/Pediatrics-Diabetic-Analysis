@@ -6,5 +6,5 @@ import com.aiims.pds.modals.FollowUp;
 
 public interface FollowUpRepository extends JpaRepository<FollowUp, Long>
 {
-
+	
 }

@@ -2,6 +2,7 @@ package com.aiims.pds.services.Impl;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -201,6 +202,8 @@ public class UserServicesImpl implements UserServices
 		FundusExamination fundusExamination = fundusExaminationRepository.save(followUpDto.getFundusExamination());
 		FootExamination footExamination = footExaminationRepository.save(followUpDto.getFootExamination());
 		
+		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+		
 		FollowUp followUp = this.modelMapper.map(followUpDto, FollowUp.class);
 		followUp.setFootExamination(footExamination);
 		followUp.setFundusExamination(fundusExamination);
@@ -210,11 +213,12 @@ public class UserServicesImpl implements UserServices
 		followUp.setUrineAlbuminCreatinineRatio(urineAlbuminCreatinineRatio);
 		followUp.setCdt(new Date());
 		followUp.setStatus(AppConstants.ACTIVE_USER_STATUS);
+
 		FollowUp savedFollowUp = this.followUpRepository.save(followUp);
-		Baseline baseline = this.baselineRepository.getOne(baselineId);
-		baseline.setFollowUps((List<FollowUp>) savedFollowUp);
-		Baseline b = this.baselineRepository.save(baseline);
-		return this.modelMapper.map(b, BaselineDto.class);
+		List<FollowUp> allFollowUps = baseline.getFollowUps();
+		allFollowUps.add(savedFollowUp);
+		baseline.setFollowUps(allFollowUps);		
+		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 	
 	@Override
@@ -229,7 +233,7 @@ public class UserServicesImpl implements UserServices
 	public BaselineDto getBaseline(Principal principal, Long baselineId)  
 	{		
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
-		return this.modelMapper.map(baseline, BaselineDto.class);
+		return  this.modelMapper.map(baseline, BaselineDto.class);
 	}
 
 	@Override
@@ -367,6 +371,8 @@ public class UserServicesImpl implements UserServices
 			
 			HSSFRow frow = sheet.createRow(6);
 			frow.createCell(0).setCellValue("Follow Details");
+			for (Cell cell : frow)
+			    cell.setCellStyle(cellStyle);
 			
 			sheet.addMergedRegion(new CellRangeAddress(6,6,0,20)); 
 			
