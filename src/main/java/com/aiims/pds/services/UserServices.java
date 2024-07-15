@@ -17,7 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserServices {
 
-	BaselineDto createBaseline(Principal principal, BaselineDto baselineDto);
+	BaselineDto createBaseline(Principal principal, Long baselineId, BaselineDto baselineDto);
 
 	BaselineDto createFamilyHistory(Long baselineId, FamilyHistoryDto familyHistoryDto);
 

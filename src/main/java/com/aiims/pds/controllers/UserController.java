@@ -34,10 +34,10 @@ public class UserController
 	@Autowired
 	private UserServices userServices;
 	
-	@PostMapping("/createBaseLine")
-	public ResponseEntity<BaselineDto> createBaseLine(Principal principal, @RequestBody BaselineDto baselineDto)
+	@PostMapping("/createBaseLine/{baselineId}")
+	public ResponseEntity<BaselineDto> createBaseLine(Principal principal, @PathVariable("baselineId") Long baselineId, @RequestBody BaselineDto baselineDto)
 	{
-		return new ResponseEntity<>(this.userServices.createBaseline(principal, baselineDto), HttpStatus.CREATED);
+		return new ResponseEntity<>(this.userServices.createBaseline(principal, baselineId, baselineDto), HttpStatus.CREATED);
 	}
 	
 	@PostMapping("/createFamilyHistory/{baselineId}")

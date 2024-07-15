@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,63 +93,59 @@ public class UserServicesImpl implements UserServices
 	private ModelMapper modelMapper;
 	
 	@Override
-	public BaselineDto createBaseline(Principal principal, BaselineDto baselineDto) 
+	public BaselineDto createBaseline(Principal principal, Long baselineId, BaselineDto baselineDto) 
 	{
 		String username = principal.getName();		
 		User user = this.userRepository.findByContactNo(username).orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo", username));
-		var baseline = Baseline.builder()
-				.address(baselineDto.getAddress())
-				.age(baselineDto.getAge())
-				.cdt(new Date())
-				.contactNo(baselineDto.getContactNo())
-				.dAge(baselineDto.getdAge())
-				.diagnosis(baselineDto.getDiagnosis())
-				.dkaAtDiagnosis(baselineDto.getDkaAtDiagnosis())
-				.dMonthYear(baselineDto.getdMonthYear())
-				.dob(baselineDto.getDob())
-				.fName(baselineDto.getfName())
-				.fuAge(baselineDto.getFuAge())
-				.fuMonthYear(baselineDto.getFuMonthYear())
-				.gender(baselineDto.getGender())
-				.status(baselineDto.getStatus())
-				.mName(baselineDto.getmName())
-				.name(baselineDto.getName())
-				.polyDuration(baselineDto.getPolyDuration())
-				.polyuriaPolydipsia(baselineDto.getPolyuriaPolydipsia())
-				.uhid(baselineDto.getUhid())
-				.user(user)
-				.weightLoss(baselineDto.getWeightLoss())
-				.weightlossDuration(baselineDto.getWeightlossDuration())
-				.status("SAVE")
-				.build();
-				
+		Baseline baseline = this.modelMapper.map(baselineDto, Baseline.class);
+		if(baselineId != null)
+		{
+			Baseline getBaseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+			baseline.setId(getBaseline.getId());
+			baseline.setUser(getBaseline.getUser());
+			baseline.setSocioeconomicHistory(getBaseline.getSocioeconomicHistory());
+			baseline.setFamilyHistory(getBaseline.getFamilyHistory());
+			baseline.setInvestigation(getBaseline.getInvestigation());
+			baseline.setFollowUps(getBaseline.getFollowUps());
+			baseline.setStatus(getBaseline.getStatus());
+		}
+		else
+		{
+			baseline.setUser(user);
+			baseline.setCdt(new Date());
+			baseline.setStatus("SAVE");
+		}
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
 	@Override
 	public BaselineDto createFamilyHistory(Long baselineId, FamilyHistoryDto familyHistoryDto) 
 	{		
-		var familyHistory = FamilyHistory.builder()
-				.hBirthBW(familyHistoryDto.gethBirthBW())
-				.hBirthcry(familyHistoryDto.gethBirthcry())
-				.hBirthdelivery(familyHistoryDto.gethBirthdelivery())
-				.hBirthTerm(familyHistoryDto.gethBirthTerm())
-				.hBirthRemarks(familyHistoryDto.gethBirthRemarks())
-				.hDevelopment(familyHistoryDto.gethDevelopment())
-				.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
-				.hDiabetesFamily(familyHistoryDto.gethDiabetesFamily())
-				.hDiabetesMGrandMother(familyHistoryDto.gethDiabetesMGrandMother())
-				.hDiabetesMGrandFather(familyHistoryDto.gethDiabetesMGrandFather())
-				.hDiabetesMother(familyHistoryDto.gethDiabetesMother())
-				.hDiabetesFather(familyHistoryDto.gethDiabetesFather())
-				.hDiabetesFGrandMother(familyHistoryDto.gethDiabetesFGrandMother())
-				.hDiabetesFGrandFather(familyHistoryDto.gethDiabetesFGrandFather())
-				.hImmunisation(familyHistoryDto.gethImmunisation())
-				.hImmunisationRemarks(familyHistoryDto.gethImmunisationRemarks())
-				.build();
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
-		baseline.setFamilyHistory(this.familyhistoryRepository.save(familyHistory));
-		
+		if(baseline.getFamilyHistory() !=  null)
+			this.familyhistoryRepository.delete(baseline.getFamilyHistory());
+		else
+		{
+			var familyHistory = FamilyHistory.builder()
+					.hBirthBW(familyHistoryDto.gethBirthBW())
+					.hBirthcry(familyHistoryDto.gethBirthcry())
+					.hBirthdelivery(familyHistoryDto.gethBirthdelivery())
+					.hBirthTerm(familyHistoryDto.gethBirthTerm())
+					.hBirthRemarks(familyHistoryDto.gethBirthRemarks())
+					.hDevelopment(familyHistoryDto.gethDevelopment())
+					.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
+					.hDiabetesFamily(familyHistoryDto.gethDiabetesFamily())
+					.hDiabetesMGrandMother(familyHistoryDto.gethDiabetesMGrandMother())
+					.hDiabetesMGrandFather(familyHistoryDto.gethDiabetesMGrandFather())
+					.hDiabetesMother(familyHistoryDto.gethDiabetesMother())
+					.hDiabetesFather(familyHistoryDto.gethDiabetesFather())
+					.hDiabetesFGrandMother(familyHistoryDto.gethDiabetesFGrandMother())
+					.hDiabetesFGrandFather(familyHistoryDto.gethDiabetesFGrandFather())
+					.hImmunisation(familyHistoryDto.gethImmunisation())
+					.hImmunisationRemarks(familyHistoryDto.gethImmunisationRemarks())
+					.build();
+			baseline.setFamilyHistory(this.familyhistoryRepository.save(familyHistory));
+		}
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
@@ -155,38 +154,47 @@ public class UserServicesImpl implements UserServices
 			SocioeconomicHistoryDto socioeconomicHistoryDto) 
 	{
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
-		
-		var socioeconomicHistory = SocioeconomicHistory.builder()
-				.abhaHolder(socioeconomicHistoryDto.getAbhaHolder())
-				.bplCardHolder(socioeconomicHistoryDto.getBplCardHolder())
-				.cghsGovtscheme(socioeconomicHistoryDto.getCghsGovtscheme())
-				.familyMemberCount(socioeconomicHistoryDto.getFamilyMemberCount())
-				.familyType(socioeconomicHistoryDto.getFamilyType())
-				.fIncome(socioeconomicHistoryDto.getfIncome())
-				.fOccupation(socioeconomicHistoryDto.getfOccupation())
-				.gIncome(socioeconomicHistoryDto.getgIncome())
-				.mIncome(socioeconomicHistoryDto.getmIncome())
-				.mOccupation(socioeconomicHistoryDto.getmOccupation())
-				.remarks(socioeconomicHistoryDto.getRemarks())
-				.build();
-		
-		baseline.setSocioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory));
+		if(baseline.getSocioeconomicHistory() !=  null)
+			this.socioeconomicHistoryRepository.delete(baseline.getSocioeconomicHistory());
+		else
+		{
+			var socioeconomicHistory = SocioeconomicHistory.builder()
+					.abhaHolder(socioeconomicHistoryDto.getAbhaHolder())
+					.bplCardHolder(socioeconomicHistoryDto.getBplCardHolder())
+					.cghsGovtscheme(socioeconomicHistoryDto.getCghsGovtscheme())
+					.familyMemberCount(socioeconomicHistoryDto.getFamilyMemberCount())
+					.familyType(socioeconomicHistoryDto.getFamilyType())
+					.fIncome(socioeconomicHistoryDto.getfIncome())
+					.fOccupation(socioeconomicHistoryDto.getfOccupation())
+					.gIncome(socioeconomicHistoryDto.getgIncome())
+					.mIncome(socioeconomicHistoryDto.getmIncome())
+					.mOccupation(socioeconomicHistoryDto.getmOccupation())
+					.remarks(socioeconomicHistoryDto.getRemarks())
+					.build();
 			
+			baseline.setSocioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory));
+		}
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
 	@Override
 	public BaselineDto createInvestigation(Principal principal, Long baselineId, Investigation investigation) 
 	{
-		List<HbA1cTable> hba1ctable = investigation.getHbA1ctable();
-		for(HbA1cTable h : hba1ctable)
-			this.hbA1cTableRepository.save(h);
-		List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
-		for(InvestigationTable i : investigationTable)
-			this.investigationTableRepository.save(i);
-		Investigation savedInvestigation = this.investigationRepository.save(investigation);
-		Baseline baseline = this.baselineRepository.getOne(baselineId);
-		baseline.setInvestigation(savedInvestigation);
+		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+		if(baseline.getInvestigation() !=  null)
+			this.investigationRepository.delete(baseline.getInvestigation());
+		else
+		{
+			List<HbA1cTable> hba1ctable = investigation.getHbA1ctable();
+			for(HbA1cTable h : hba1ctable)
+				this.hbA1cTableRepository.save(h);
+			List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
+			for(InvestigationTable i : investigationTable)
+				this.investigationTableRepository.save(i);
+			Investigation savedInvestigation = this.investigationRepository.save(investigation);
+			
+			baseline.setInvestigation(savedInvestigation);
+		}
 		Baseline b = this.baselineRepository.save(baseline);
 		return this.modelMapper.map(b, BaselineDto.class);
 	}
@@ -249,9 +257,13 @@ public class UserServicesImpl implements UserServices
 			HSSFRow headerRow = sheet.createRow(0);
 			Font headerFont = workbook.createFont();
 			headerFont.setBold(true);
-			headerFont.setColor(HSSFColor.HSSFColorPredefined.DARK_BLUE.getIndex());
+			headerFont.setFontHeightInPoints((short)12);
+			headerFont.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
 			CellStyle cellStyle = workbook.createCellStyle();
 			cellStyle.setFont(headerFont);
+			cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+		    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+//			cellStyle.setFillBackgroundColor(HSSFColor.HSSFColorPredefined.DARK_BLUE.getIndex());
 			
 			headerRow.createCell(0).setCellValue("Baseline Details of "+ baselineDto.getName()+" ("+baselineDto.getUhid()+")");
 			
@@ -404,12 +416,12 @@ public class UserServicesImpl implements UserServices
 			    cell1.getCellStyle().setAlignment(HorizontalAlignment.CENTER);
 			}
 			
-			int dataRowIndex = 8;
+			int dataRowIndex = 9;
 			
 			for(FollowUp followUp : baselineDto.getFollowUps())
 			{
 				HSSFRow fdataRow = sheet.createRow(dataRowIndex++);
-				fdataRow.createCell(0).setCellValue(followUp.getCdt());
+				fdataRow.createCell(0).setCellValue(String.valueOf(followUp.getCdt()));
 				fdataRow.createCell(1).setCellValue(baselineDto.getName());
 				fdataRow.createCell(2).setCellValue(String.valueOf(baselineDto.getUhid()));
 				fdataRow.createCell(3).setCellValue(baselineDto.getAge());
