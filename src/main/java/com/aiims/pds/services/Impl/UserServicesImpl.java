@@ -124,28 +124,26 @@ public class UserServicesImpl implements UserServices
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
 		if(baseline.getFamilyHistory() !=  null)
 			this.familyhistoryRepository.delete(baseline.getFamilyHistory());
-		else
-		{
-			var familyHistory = FamilyHistory.builder()
-					.hBirthBW(familyHistoryDto.gethBirthBW())
-					.hBirthcry(familyHistoryDto.gethBirthcry())
-					.hBirthdelivery(familyHistoryDto.gethBirthdelivery())
-					.hBirthTerm(familyHistoryDto.gethBirthTerm())
-					.hBirthRemarks(familyHistoryDto.gethBirthRemarks())
-					.hDevelopment(familyHistoryDto.gethDevelopment())
-					.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
-					.hDiabetesFamily(familyHistoryDto.gethDiabetesFamily())
-					.hDiabetesMGrandMother(familyHistoryDto.gethDiabetesMGrandMother())
-					.hDiabetesMGrandFather(familyHistoryDto.gethDiabetesMGrandFather())
-					.hDiabetesMother(familyHistoryDto.gethDiabetesMother())
-					.hDiabetesFather(familyHistoryDto.gethDiabetesFather())
-					.hDiabetesFGrandMother(familyHistoryDto.gethDiabetesFGrandMother())
-					.hDiabetesFGrandFather(familyHistoryDto.gethDiabetesFGrandFather())
-					.hImmunisation(familyHistoryDto.gethImmunisation())
-					.hImmunisationRemarks(familyHistoryDto.gethImmunisationRemarks())
-					.build();
-			baseline.setFamilyHistory(this.familyhistoryRepository.save(familyHistory));
-		}
+		
+		var familyHistory = FamilyHistory.builder()
+				.hBirthBW(familyHistoryDto.gethBirthBW())
+				.hBirthcry(familyHistoryDto.gethBirthcry())
+				.hBirthdelivery(familyHistoryDto.gethBirthdelivery())
+				.hBirthTerm(familyHistoryDto.gethBirthTerm())
+				.hBirthRemarks(familyHistoryDto.gethBirthRemarks())
+				.hDevelopment(familyHistoryDto.gethDevelopment())
+				.hDevelopmentRemarks(familyHistoryDto.gethDevelopmentRemarks())
+				.hDiabetesFamily(familyHistoryDto.gethDiabetesFamily())
+				.hDiabetesMGrandMother(familyHistoryDto.gethDiabetesMGrandMother())
+				.hDiabetesMGrandFather(familyHistoryDto.gethDiabetesMGrandFather())
+				.hDiabetesMother(familyHistoryDto.gethDiabetesMother())
+				.hDiabetesFather(familyHistoryDto.gethDiabetesFather())
+				.hDiabetesFGrandMother(familyHistoryDto.gethDiabetesFGrandMother())
+				.hDiabetesFGrandFather(familyHistoryDto.gethDiabetesFGrandFather())
+				.hImmunisation(familyHistoryDto.gethImmunisation())
+				.hImmunisationRemarks(familyHistoryDto.gethImmunisationRemarks())
+				.build();
+		baseline.setFamilyHistory(this.familyhistoryRepository.save(familyHistory));
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
@@ -156,24 +154,22 @@ public class UserServicesImpl implements UserServices
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
 		if(baseline.getSocioeconomicHistory() !=  null)
 			this.socioeconomicHistoryRepository.delete(baseline.getSocioeconomicHistory());
-		else
-		{
-			var socioeconomicHistory = SocioeconomicHistory.builder()
-					.abhaHolder(socioeconomicHistoryDto.getAbhaHolder())
-					.bplCardHolder(socioeconomicHistoryDto.getBplCardHolder())
-					.cghsGovtscheme(socioeconomicHistoryDto.getCghsGovtscheme())
-					.familyMemberCount(socioeconomicHistoryDto.getFamilyMemberCount())
-					.familyType(socioeconomicHistoryDto.getFamilyType())
-					.fIncome(socioeconomicHistoryDto.getfIncome())
-					.fOccupation(socioeconomicHistoryDto.getfOccupation())
-					.gIncome(socioeconomicHistoryDto.getgIncome())
-					.mIncome(socioeconomicHistoryDto.getmIncome())
-					.mOccupation(socioeconomicHistoryDto.getmOccupation())
-					.remarks(socioeconomicHistoryDto.getRemarks())
-					.build();
-			
-			baseline.setSocioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory));
-		}
+		
+		var socioeconomicHistory = SocioeconomicHistory.builder()
+				.abhaHolder(socioeconomicHistoryDto.getAbhaHolder())
+				.bplCardHolder(socioeconomicHistoryDto.getBplCardHolder())
+				.cghsGovtscheme(socioeconomicHistoryDto.getCghsGovtscheme())
+				.familyMemberCount(socioeconomicHistoryDto.getFamilyMemberCount())
+				.familyType(socioeconomicHistoryDto.getFamilyType())
+				.fIncome(socioeconomicHistoryDto.getfIncome())
+				.fOccupation(socioeconomicHistoryDto.getfOccupation())
+				.gIncome(socioeconomicHistoryDto.getgIncome())
+				.mIncome(socioeconomicHistoryDto.getmIncome())
+				.mOccupation(socioeconomicHistoryDto.getmOccupation())
+				.remarks(socioeconomicHistoryDto.getRemarks())
+				.build();
+		
+		baseline.setSocioeconomicHistory(this.socioeconomicHistoryRepository.save(socioeconomicHistory));
 		return this.modelMapper.map(this.baselineRepository.save(baseline), BaselineDto.class);
 	}
 
@@ -182,19 +178,26 @@ public class UserServicesImpl implements UserServices
 	{
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
 		if(baseline.getInvestigation() !=  null)
-			this.investigationRepository.delete(baseline.getInvestigation());
-		else
 		{
-			List<HbA1cTable> hba1ctable = investigation.getHbA1ctable();
-			for(HbA1cTable h : hba1ctable)
-				this.hbA1cTableRepository.save(h);
-			List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
+			List<HbA1cTable> hba1c = baseline.getInvestigation().getHbA1ctable();
+			for(HbA1cTable h : hba1c)
+				this.hbA1cTableRepository.delete(h);
+			List<InvestigationTable> investigationTable = baseline.getInvestigation().getInvestigationTable();
 			for(InvestigationTable i : investigationTable)
-				this.investigationTableRepository.save(i);
-			Investigation savedInvestigation = this.investigationRepository.save(investigation);
-			
-			baseline.setInvestigation(savedInvestigation);
+				this.investigationTableRepository.delete(i);
+			this.investigationRepository.delete(baseline.getInvestigation());
 		}
+		
+		List<HbA1cTable> hba1ctable = investigation.getHbA1ctable();
+		for(HbA1cTable h : hba1ctable)
+			this.hbA1cTableRepository.save(h);
+		List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
+		for(InvestigationTable i : investigationTable)
+			this.investigationTableRepository.save(i);
+		Investigation savedInvestigation = this.investigationRepository.save(investigation);
+		
+		baseline.setInvestigation(savedInvestigation);
+		
 		Baseline b = this.baselineRepository.save(baseline);
 		return this.modelMapper.map(b, BaselineDto.class);
 	}

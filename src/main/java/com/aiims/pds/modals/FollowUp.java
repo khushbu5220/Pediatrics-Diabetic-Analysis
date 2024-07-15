@@ -3,6 +3,8 @@ package com.aiims.pds.modals;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,6 +33,7 @@ public class FollowUp
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate date;
 	private String height;
 	private String weight;
@@ -41,9 +44,11 @@ public class FollowUp
 	private HbA1cTable hba1ctable;
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private ThyroidProfile thyroidProfile;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate celiacSerologyDate;
 	private String celiacSerologyValue;
 	private String multiClinicVisit;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate lastVisitMultiClinicDate;
 	private String insulineDoseWritten;
 	private String totDailyDoseInsulin;
