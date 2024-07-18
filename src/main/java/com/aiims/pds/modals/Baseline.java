@@ -60,7 +60,7 @@ public class Baseline
 	private String weightLoss;
 	private String weightlossDuration;
 	private String dkaAtDiagnosis;
-	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
+	@ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private User user;
 	@OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
 	private FamilyHistory familyHistory;

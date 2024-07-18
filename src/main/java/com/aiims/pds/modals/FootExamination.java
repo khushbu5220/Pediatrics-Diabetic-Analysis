@@ -28,5 +28,6 @@ public class FootExamination
 	private Long id;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate date;
+	private String value;
 	private String report;
 }

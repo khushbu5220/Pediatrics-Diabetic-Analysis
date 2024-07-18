@@ -31,4 +31,5 @@ public class UrineAlbuminCreatinineRatio
 	private String urineAlbumin;
 	private String cr;
 	private String ratio;
+	private String remarks;
 }

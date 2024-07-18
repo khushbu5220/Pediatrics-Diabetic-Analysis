@@ -182,18 +182,19 @@ public class UserServicesImpl implements UserServices
 			List<HbA1cTable> hba1c = baseline.getInvestigation().getHbA1ctable();
 			for(HbA1cTable h : hba1c)
 				this.hbA1cTableRepository.delete(h);
-			List<InvestigationTable> investigationTable = baseline.getInvestigation().getInvestigationTable();
-			for(InvestigationTable i : investigationTable)
-				this.investigationTableRepository.delete(i);
+//			List<InvestigationTable> investigationTable = baseline.getInvestigation().getInvestigationTable();
+//			for(InvestigationTable i : investigationTable)
+//				this.investigationTableRepository.delete(i);
 			this.investigationRepository.delete(baseline.getInvestigation());
 		}
 		
 		List<HbA1cTable> hba1ctable = investigation.getHbA1ctable();
 		for(HbA1cTable h : hba1ctable)
 			this.hbA1cTableRepository.save(h);
-		List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
-		for(InvestigationTable i : investigationTable)
-			this.investigationTableRepository.save(i);
+		
+//		List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
+//		for(InvestigationTable i : investigationTable)
+//			this.investigationTableRepository.save(i);
 		Investigation savedInvestigation = this.investigationRepository.save(investigation);
 		
 		baseline.setInvestigation(savedInvestigation);
@@ -245,6 +246,17 @@ public class UserServicesImpl implements UserServices
 	{		
 		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
 		return  this.modelMapper.map(baseline, BaselineDto.class);
+	}
+	
+	@Override
+	public List<BaselineDto> getAllBaseline(Principal principal) {
+		String username = principal.getName();		
+		User user = this.userRepository.findByContactNo(username).orElseThrow(() -> new ResourceNotFoundException("Username", "ContactNo", username));
+		List<Baseline> baselines = this.baselineRepository.findByUser(user);
+		List<BaselineDto> baselineDtos = new ArrayList<>();
+		for(Baseline b : baselines)
+			baselineDtos.add(this.modelMapper.map(b, BaselineDto.class));
+		return baselineDtos;
 	}
 
 	@Override
@@ -372,14 +384,14 @@ public class UserServicesImpl implements UserServices
 			dataRow.createCell(36).setCellValue(baselineDto.getInvestigation().getSgot());
 			dataRow.createCell(37).setCellValue(baselineDto.getInvestigation().getSgpt());
 			dataRow.createCell(38).setCellValue(baselineDto.getInvestigation().getVitd());
-			dataRow.createCell(39).setCellValue(baselineDto.getInvestigation().getHbA1ctable().toString());
-			dataRow.createCell(40).setCellValue("baselineDto.getInvestigation().getInvestigationTable()");
-			dataRow.createCell(41).setCellValue(baselineDto.getName());
-			dataRow.createCell(42).setCellValue(baselineDto.getUhid());
-			dataRow.createCell(43).setCellValue(baselineDto.getName());
-			dataRow.createCell(44).setCellValue(baselineDto.getUhid());
-			dataRow.createCell(45).setCellValue(baselineDto.getName());
-			dataRow.createCell(46).setCellValue(baselineDto.getUhid());
+			dataRow.createCell(39).setCellValue(baselineDto.getInvestigation().getCeliacSerology().getValue());
+			dataRow.createCell(40).setCellValue(baselineDto.getInvestigation().getUrineAlbuminCreatinineRatio().getUrineAlbumin());
+			dataRow.createCell(41).setCellValue(baselineDto.getInvestigation().getFundusExamination().getValue());
+			dataRow.createCell(42).setCellValue(baselineDto.getInvestigation().getFootExamination().getValue());
+			dataRow.createCell(43).setCellValue(baselineDto.getInvestigation().getLipidProfile().getLdl());
+			dataRow.createCell(44).setCellValue(baselineDto.getInvestigation().getLipidProfile().getHdl());
+			dataRow.createCell(45).setCellValue(baselineDto.getInvestigation().getLipidProfile().getTc());
+			dataRow.createCell(46).setCellValue(baselineDto.getInvestigation().getLipidProfile().getTg());
 			
 			for (Cell cell1 : dataRow)
 			    cell1.getCellStyle().setAlignment(HorizontalAlignment.CENTER);
@@ -457,5 +469,7 @@ public class UserServicesImpl implements UserServices
 			e.printStackTrace();
 		}
 	}
+
+	
 
 }

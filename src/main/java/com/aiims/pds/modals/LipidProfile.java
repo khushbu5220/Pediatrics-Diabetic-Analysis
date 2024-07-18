@@ -32,4 +32,5 @@ public class LipidProfile
 	private String tg;
 	private String ldl;
 	private String hdl;
+	private String remarks;
 }

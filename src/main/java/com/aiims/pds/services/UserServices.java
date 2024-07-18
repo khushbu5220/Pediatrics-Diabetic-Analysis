@@ -2,6 +2,7 @@ package com.aiims.pds.services;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.List;
 
 import com.aiims.pds.modals.Baseline;
 import com.aiims.pds.modals.FamilyHistory;
@@ -33,4 +34,6 @@ public interface UserServices {
 	void generatePatientXLS(HttpServletResponse response, BaselineDto baselineDto) throws IOException;
 
 	BaselineDto submitBaseline(Principal principal, Long baselineId);
+
+	List<BaselineDto> getAllBaseline(Principal principal);
 }

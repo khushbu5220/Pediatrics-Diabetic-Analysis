@@ -3,6 +3,7 @@ package com.aiims.pds.controllers;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,13 @@ public class UserController
 	public ResponseEntity<BaselineDto> getBaseline(Principal principal, @PathVariable("baselineId") Long baselineId)
 	{
 		BaselineDto baselineDto = this.userServices.getBaseline(principal, baselineId);
+		return new ResponseEntity<>(baselineDto, HttpStatus.OK);
+	}
+	
+	@GetMapping("/getAllBaseline")
+	public ResponseEntity<List<BaselineDto>> getAllBaseline(Principal principal)
+	{
+		List<BaselineDto> baselineDto = this.userServices.getAllBaseline(principal);
 		return new ResponseEntity<>(baselineDto, HttpStatus.OK);
 	}
 	

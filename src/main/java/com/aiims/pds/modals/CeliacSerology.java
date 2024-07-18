@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,8 +19,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="tbl_fundusExamination")
-public class FundusExamination 
+@Table(name="tbl_celiacserology")
+public class CeliacSerology 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,5 +28,5 @@ public class FundusExamination
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate date;
 	private String value;
-	private String report;
+	private String remarks;
 }
