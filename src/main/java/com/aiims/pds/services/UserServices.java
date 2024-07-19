@@ -4,11 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
-import com.aiims.pds.modals.Baseline;
-import com.aiims.pds.modals.FamilyHistory;
-import com.aiims.pds.modals.FollowUp;
 import com.aiims.pds.modals.Investigation;
-import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
 import com.aiims.pds.payloads.FollowUpDto;
@@ -36,4 +32,10 @@ public interface UserServices {
 	BaselineDto submitBaseline(Principal principal, Long baselineId);
 
 	List<BaselineDto> getAllBaseline(Principal principal);
+
+	List<FollowUpDto> getFollowUPI(Principal principal);
+
+	List<FollowUpDto> getFollowUPII(Principal principal);
+
+	void getXLSFollowUp(HttpServletResponse response, List<FollowUpDto> followupDto, String num);
 }

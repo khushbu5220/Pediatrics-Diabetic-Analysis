@@ -10,6 +10,7 @@ import com.aiims.pds.modals.InvestigationTable;
 import com.aiims.pds.modals.LipidProfile;
 import com.aiims.pds.modals.ThyroidProfile;
 import com.aiims.pds.modals.UrineAlbuminCreatinineRatio;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 public class FollowUpDto 
 {
 	private Long id;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate date;
 	private String height;
 	private String weight;
@@ -32,9 +34,11 @@ public class FollowUpDto
 	private String lipodystrophy;
 	private HbA1cTable hba1ctable;
 	private ThyroidProfile thyroidProfile;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate celiacSerologyDate;
 	private String celiacSerologyValue;
 	private String multiClinicVisit;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate lastVisitMultiClinicDate;
 	private String insulineDoseWritten;
 	private String totDailyDoseInsulin;

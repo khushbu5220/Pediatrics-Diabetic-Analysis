@@ -5,8 +5,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -31,7 +31,6 @@ import com.aiims.pds.modals.FootExamination;
 import com.aiims.pds.modals.FundusExamination;
 import com.aiims.pds.modals.HbA1cTable;
 import com.aiims.pds.modals.Investigation;
-import com.aiims.pds.modals.InvestigationTable;
 import com.aiims.pds.modals.LipidProfile;
 import com.aiims.pds.modals.SocioeconomicHistory;
 import com.aiims.pds.modals.ThyroidProfile;
@@ -42,13 +41,13 @@ import com.aiims.pds.payloads.FamilyHistoryDto;
 import com.aiims.pds.payloads.FollowUpDto;
 import com.aiims.pds.payloads.SocioeconomicHistoryDto;
 import com.aiims.pds.repository.BaselineRepository;
+import com.aiims.pds.repository.CeliacSerologyRepository;
 import com.aiims.pds.repository.FamilyhistoryRepository;
 import com.aiims.pds.repository.FollowUpRepository;
 import com.aiims.pds.repository.FootExaminationRepository;
 import com.aiims.pds.repository.FundusExaminationRepository;
 import com.aiims.pds.repository.HbA1cTableRepository;
 import com.aiims.pds.repository.InvestigationRepository;
-import com.aiims.pds.repository.InvestigationTableRepository;
 import com.aiims.pds.repository.LipidProfileRepository;
 import com.aiims.pds.repository.SocioeconomicHistoryRepository;
 import com.aiims.pds.repository.ThyroidProfileRepository;
@@ -59,7 +58,6 @@ import com.aiims.pds.services.UserServices;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("deprecation")
 @Service
 public class UserServicesImpl implements UserServices 
 {
@@ -76,9 +74,9 @@ public class UserServicesImpl implements UserServices
 	@Autowired
 	private HbA1cTableRepository hbA1cTableRepository;
 	@Autowired
-	private InvestigationTableRepository investigationTableRepository;
-	@Autowired
 	private ThyroidProfileRepository thyroidProfileRepository;
+	@Autowired
+	private CeliacSerologyRepository celiacSerologyRepository;
 	@Autowired
 	private LipidProfileRepository lipidProfileRepository;
 	@Autowired
@@ -182,9 +180,11 @@ public class UserServicesImpl implements UserServices
 			List<HbA1cTable> hba1c = baseline.getInvestigation().getHbA1ctable();
 			for(HbA1cTable h : hba1c)
 				this.hbA1cTableRepository.delete(h);
-//			List<InvestigationTable> investigationTable = baseline.getInvestigation().getInvestigationTable();
-//			for(InvestigationTable i : investigationTable)
-//				this.investigationTableRepository.delete(i);
+			
+			this.celiacSerologyRepository.delete(baseline.getInvestigation().getCeliacSerology());
+			this.footExaminationRepository.delete(baseline.getInvestigation().getFootExamination());
+			this.fundusExaminationRepository.delete(baseline.getInvestigation().getFundusExamination());
+			this.lipidProfileRepository.delete(baseline.getInvestigation().getLipidProfile());
 			this.investigationRepository.delete(baseline.getInvestigation());
 		}
 		
@@ -192,9 +192,10 @@ public class UserServicesImpl implements UserServices
 		for(HbA1cTable h : hba1ctable)
 			this.hbA1cTableRepository.save(h);
 		
-//		List<InvestigationTable> investigationTable = investigation.getInvestigationTable();
-//		for(InvestigationTable i : investigationTable)
-//			this.investigationTableRepository.save(i);
+		this.celiacSerologyRepository.save(investigation.getCeliacSerology());
+		this.footExaminationRepository.save(investigation.getFootExamination());
+		this.fundusExaminationRepository.save(investigation.getFundusExamination());
+		this.lipidProfileRepository.save(investigation.getLipidProfile());
 		Investigation savedInvestigation = this.investigationRepository.save(investigation);
 		
 		baseline.setInvestigation(savedInvestigation);
@@ -203,7 +204,6 @@ public class UserServicesImpl implements UserServices
 		return this.modelMapper.map(b, BaselineDto.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUpDto followUpDto) 
 	{
@@ -278,7 +278,6 @@ public class UserServicesImpl implements UserServices
 			cellStyle.setFont(headerFont);
 			cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
 		    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-//			cellStyle.setFillBackgroundColor(HSSFColor.HSSFColorPredefined.DARK_BLUE.getIndex());
 			
 			headerRow.createCell(0).setCellValue("Baseline Details of "+ baselineDto.getName()+" ("+baselineDto.getUhid()+")");
 			
@@ -444,7 +443,7 @@ public class UserServicesImpl implements UserServices
 				fdataRow.createCell(5).setCellValue(followUp.getWeight());
 				fdataRow.createCell(6).setCellValue(followUp.getHeight());
 				fdataRow.createCell(7).setCellValue(followUp.getBp());
-				fdataRow.createCell(8).setCellValue(followUp.getSmr());
+				fdataRow.createCell(8).setCellValue("Prepubertal or Breast Stage - "+followUp.getSmrBreastStage()+", Pubic Hair Stage - "+followUp.getSmrPubicHairStage());
 				fdataRow.createCell(9).setCellValue(followUp.getLipodystrophy());
 				fdataRow.createCell(10).setCellValue(followUp.getHba1ctable().getHba1c());
 				fdataRow.createCell(11).setCellValue(followUp.getThyroidProfile().getT3());
@@ -470,6 +469,139 @@ public class UserServicesImpl implements UserServices
 		}
 	}
 
+	@Override
+	public List<FollowUpDto> getFollowUPI(Principal principal) 
+	{
+		List<BaselineDto> baselineDtos = getAllBaseline(principal);
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<FollowUpDto> followUpDtos = new ArrayList<>();
+		for(BaselineDto b : activeBaselineDtos)
+		{
+			System.out.println("b.getFollowUps() : "+b.getFollowUps());
+			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
+				followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(0), FollowUpDto.class));
+		}
+		return followUpDtos;
+	}
 	
+	@Override
+	public List<FollowUpDto> getFollowUPII(Principal principal) 
+	{
+		List<BaselineDto> baselineDtos = getAllBaseline(principal);
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<FollowUpDto> followUpDtos = new ArrayList<>();
+		for(BaselineDto b : activeBaselineDtos)
+		{
+			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
+			{
+				try
+				{
+					followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(1), FollowUpDto.class));									
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		return followUpDtos;
+	}
 
+	@Override
+	public void getXLSFollowUp(HttpServletResponse response, List<FollowUpDto> followupDto, String num) 
+	{
+		try
+		(
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			ServletOutputStream os = response.getOutputStream()
+		)
+		{
+			HSSFSheet sheet = workbook.createSheet("Follow Up "+num+" Details ");
+			HSSFRow headerRow = sheet.createRow(0);
+			Font headerFont = workbook.createFont();
+			headerFont.setBold(true);
+			headerFont.setFontHeightInPoints((short)12);
+			headerFont.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+			CellStyle cellStyle = workbook.createCellStyle();
+			cellStyle.setFont(headerFont);
+			cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+		    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			
+			headerRow.createCell(0).setCellValue("Follow Up "+num+" Details ");
+			
+			sheet.addMergedRegion(new CellRangeAddress(0,0,0,20)); 
+			for (Cell cell : headerRow)
+			    cell.setCellStyle(cellStyle);			
+			
+			HSSFRow row1 = sheet.createRow(2);
+			row1.createCell(0).setCellValue("Follow Up Visit");
+			row1.createCell(1).setCellValue("Name");
+			row1.createCell(2).setCellValue("UHID");
+			row1.createCell(3).setCellValue("Age");
+			row1.createCell(4).setCellValue("Sex");
+			row1.createCell(5).setCellValue("Weight");
+			row1.createCell(6).setCellValue("Height");
+			row1.createCell(7).setCellValue("BP");
+			row1.createCell(8).setCellValue("SMR");
+			row1.createCell(9).setCellValue("Lipodystrophy");
+			row1.createCell(10).setCellValue("HbA1c");
+			row1.createCell(11).setCellValue("T3");
+			row1.createCell(12).setCellValue("T4");
+			row1.createCell(13).setCellValue("TSH");
+			row1.createCell(14).setCellValue("FT4");
+			row1.createCell(15).setCellValue("Celiac Serology");
+			row1.createCell(16).setCellValue("Date of Last Visit in the Multidisciplinary Clinic");
+			row1.createCell(17).setCellValue("Insulin Dose written or not");
+			row1.createCell(18).setCellValue("Total Daily Dose of Insulin");
+			row1.createCell(19).setCellValue("Basal Insulin Dose");
+			row1.createCell(20).setCellValue("Bolus Insulin Dose");
+			
+			Font rowFont = workbook.createFont();
+			rowFont.setBold(true);
+			CellStyle rowCellStyle = workbook.createCellStyle();
+			rowCellStyle.setFont(rowFont);
+			for (Cell cell1 : row1) {
+			    cell1.setCellStyle(rowCellStyle);
+			    cell1.getCellStyle().setAlignment(HorizontalAlignment.CENTER);
+			}
+			
+			int dataRowIndex = 3;
+			
+			for(FollowUpDto f : followupDto)
+			{
+				Baseline baseline = this.baselineRepository.findByFollowUps(this.modelMapper.map(f, FollowUp.class));
+				HSSFRow fdataRow = sheet.createRow(dataRowIndex++);
+				fdataRow.createCell(0).setCellValue(String.valueOf(f.getCdt()));
+				fdataRow.createCell(1).setCellValue(baseline.getName());
+				fdataRow.createCell(2).setCellValue(String.valueOf(baseline.getUhid()));
+				fdataRow.createCell(3).setCellValue(baseline.getAge());
+				fdataRow.createCell(4).setCellValue(baseline.getGender());
+				fdataRow.createCell(5).setCellValue(f.getWeight());
+				fdataRow.createCell(6).setCellValue(f.getHeight());
+				fdataRow.createCell(7).setCellValue(f.getBp());
+				fdataRow.createCell(8).setCellValue("Prepubertal or Breast Stage - "+f.getSmrBreastStage()+", Pubic Hair Stage - "+f.getSmrPubicHairStage());
+				fdataRow.createCell(9).setCellValue(f.getLipodystrophy());
+				fdataRow.createCell(10).setCellValue(f.getHba1ctable().getHba1c());
+				fdataRow.createCell(11).setCellValue(f.getThyroidProfile().getT3());
+				fdataRow.createCell(12).setCellValue(f.getThyroidProfile().getT4());
+				fdataRow.createCell(13).setCellValue(f.getThyroidProfile().getTsh());
+				fdataRow.createCell(14).setCellValue(f.getThyroidProfile().getFt4());
+				fdataRow.createCell(15).setCellValue(f.getCeliacSerologyValue());
+				fdataRow.createCell(16).setCellValue(String.valueOf(f.getLastVisitMultiClinicDate()));
+				fdataRow.createCell(17).setCellValue(f.getInsulineDoseWritten());
+				fdataRow.createCell(18).setCellValue(f.getTotDailyDoseInsulin());
+				fdataRow.createCell(19).setCellValue(f.getBasalInsulineDose());
+				fdataRow.createCell(20).setCellValue(f.getBolusInsuline());
+			}
+			
+			for(int i = 0; i<=46; i++)
+				sheet.autoSizeColumn(i);
+			
+			workbook.write(os);	
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 }

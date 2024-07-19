@@ -2,7 +2,6 @@ package com.aiims.pds.controllers;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiims.pds.modals.FollowUp;
 import com.aiims.pds.modals.Investigation;
 import com.aiims.pds.payloads.BaselineDto;
 import com.aiims.pds.payloads.FamilyHistoryDto;
@@ -101,5 +98,27 @@ public class UserController
 		String headerValue = "attachment;filename="+baselineDto.getUhid()+"-DiabetesRegistry.xls";
 		response.setHeader(headerKey, headerValue);
 		this.userServices.generatePatientXLS(response, baselineDto);
+	}
+	
+	@GetMapping("/getXLSFollowUp-I")
+	public void getXLSFollowUpI(Principal principal, HttpServletResponse response) throws IOException
+	{
+		List<FollowUpDto> followupDto = this.userServices.getFollowUPI(principal);
+		response.setContentType("application/octet-stream");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment;filename=DiabetesFollowUp-I-Registry.xls";
+		response.setHeader(headerKey, headerValue);
+		this.userServices.getXLSFollowUp(response, followupDto, "I");
+	}
+	
+	@GetMapping("/getXLSFollowUp-II")
+	public void getXLSFollowUpII(Principal principal, HttpServletResponse response) throws IOException
+	{
+		List<FollowUpDto> followupDto = this.userServices.getFollowUPII(principal);
+		response.setContentType("application/octet-stream");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment;filename=DiabetesFollowUp-II-Registry.xls";
+		response.setHeader(headerKey, headerValue);
+		this.userServices.getXLSFollowUp(response, followupDto, "II");
 	}
 }
