@@ -38,4 +38,8 @@ public interface UserServices {
 	List<FollowUpDto> getFollowUPII(Principal principal);
 
 	void getXLSFollowUp(HttpServletResponse response, List<FollowUpDto> followupDto, String num);
+
+	List<FollowUpDto> getFollowUPIII(Principal principal);
+
+	List<FollowUpDto> getLastFollowUp(Principal principal);
 }

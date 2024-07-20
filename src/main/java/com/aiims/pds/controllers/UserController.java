@@ -121,4 +121,26 @@ public class UserController
 		response.setHeader(headerKey, headerValue);
 		this.userServices.getXLSFollowUp(response, followupDto, "II");
 	}
+	
+	@GetMapping("/getXLSFollowUp-III")
+	public void getXLSFollowUpIII(Principal principal, HttpServletResponse response) throws IOException
+	{
+		List<FollowUpDto> followupDto = this.userServices.getFollowUPIII(principal);
+		response.setContentType("application/octet-stream");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment;filename=DiabetesFollowUp-III-Registry.xls";
+		response.setHeader(headerKey, headerValue);
+		this.userServices.getXLSFollowUp(response, followupDto, "III");
+	}
+	
+	@GetMapping("/getXLSLastFollowUp")
+	public void getXLSLastFollowUp(Principal principal, HttpServletResponse response) throws IOException
+	{
+		List<FollowUpDto> followupDto = this.userServices.getLastFollowUp(principal);
+		response.setContentType("application/octet-stream");
+		String headerKey = "Content-Disposition";
+		String headerValue = "attachment;filename=Diabetes-Last-FollowUp-Registry.xls";
+		response.setHeader(headerKey, headerValue);
+		this.userServices.getXLSFollowUp(response, followupDto, "Last");
+	}
 }

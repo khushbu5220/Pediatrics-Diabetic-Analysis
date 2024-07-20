@@ -494,14 +494,41 @@ public class UserServicesImpl implements UserServices
 		{
 			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
 			{
-				try
-				{
-					followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(1), FollowUpDto.class));									
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+				try{followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(1), FollowUpDto.class));}catch(Exception e){e.printStackTrace();}
+			}
+		}
+		return followUpDtos;
+	}
+	
+	@Override
+	public List<FollowUpDto> getFollowUPIII(Principal principal) 
+	{
+		List<BaselineDto> baselineDtos = getAllBaseline(principal);
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<FollowUpDto> followUpDtos = new ArrayList<>();
+		for(BaselineDto b : activeBaselineDtos)
+		{
+			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
+			{
+				try{followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(2), FollowUpDto.class));}catch(Exception e){e.printStackTrace();}
+			}
+		}
+		return followUpDtos;
+	}
+	
+	@Override
+	public List<FollowUpDto> getLastFollowUp(Principal principal) 
+	{
+		List<BaselineDto> baselineDtos = getAllBaseline(principal);
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<FollowUpDto> followUpDtos = new ArrayList<>();
+		for(BaselineDto b : activeBaselineDtos)
+		{
+			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
+			{
+				int i = b.getFollowUps().size();
+				System.out.println(b.getFollowUps().get(i-1).getId());
+				followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(i-1), FollowUpDto.class));
 			}
 		}
 		return followUpDtos;
@@ -516,7 +543,13 @@ public class UserServicesImpl implements UserServices
 			ServletOutputStream os = response.getOutputStream()
 		)
 		{
-			HSSFSheet sheet = workbook.createSheet("Follow Up "+num+" Details ");
+			String heading = "";
+			if("Last".equalsIgnoreCase(num))
+				heading = "Last Follow Up Details";
+			else
+				heading = "Follow Up "+num+" Details ";
+			
+			HSSFSheet sheet = workbook.createSheet(heading);
 			HSSFRow headerRow = sheet.createRow(0);
 			Font headerFont = workbook.createFont();
 			headerFont.setBold(true);
@@ -527,7 +560,7 @@ public class UserServicesImpl implements UserServices
 			cellStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
 		    cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 			
-			headerRow.createCell(0).setCellValue("Follow Up "+num+" Details ");
+			headerRow.createCell(0).setCellValue(heading);
 			
 			sheet.addMergedRegion(new CellRangeAddress(0,0,0,20)); 
 			for (Cell cell : headerRow)
