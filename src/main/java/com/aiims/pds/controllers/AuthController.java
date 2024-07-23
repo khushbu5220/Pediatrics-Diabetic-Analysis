@@ -1,36 +1,26 @@
 package com.aiims.pds.controllers;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.aiims.pds.exceptions.ApiException;
 import com.aiims.pds.exceptions.ResourceNotFoundException;
 import com.aiims.pds.payloads.EmployeeRequest;
 import com.aiims.pds.payloads.JwtAuthRequest;
 import com.aiims.pds.payloads.JwtAuthResponse;
 import com.aiims.pds.payloads.OtpRequest;
 import com.aiims.pds.payloads.PassKeyRequest;
-import com.aiims.pds.payloads.UserDto;
-import com.aiims.pds.payloads.UserResponse;
 import com.aiims.pds.payloads.UserResponse;
 import com.aiims.pds.repository.UserRepository;
 import com.aiims.pds.security.JwtTokenService;
 import com.aiims.pds.services.AdminServices;
-import com.aiims.pds.security.JwtTokenService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -47,11 +37,7 @@ public class AuthController {
 	@Autowired
 	private AdminServices adminServices;
 	@Autowired
-	private UserDetailsService userDetailsService;
-	@Autowired
 	private AuthenticationManager authenticationManager;
-	@Autowired
-	private ModelMapper modelMapper;
 	@Autowired
 	private UserRepository userRepository;
 	

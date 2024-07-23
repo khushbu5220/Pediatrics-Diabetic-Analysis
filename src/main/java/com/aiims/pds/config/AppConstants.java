@@ -13,5 +13,4 @@ public class AppConstants {
 	public static final String ACTIVE_USER_STATUS= "ACTIVE";
 	public static final String INACTIVE_USER_STATUS= "INACTIVE";
 	
-	
 }

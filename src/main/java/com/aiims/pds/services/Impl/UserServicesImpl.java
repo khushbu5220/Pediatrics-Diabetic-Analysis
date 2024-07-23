@@ -207,22 +207,34 @@ public class UserServicesImpl implements UserServices
 	@Override
 	public BaselineDto createFollowUP(Principal principal, Long baselineId, FollowUpDto followUpDto) 
 	{
+		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
+		FollowUp followUp = this.modelMapper.map(followUpDto, FollowUp.class);
+		
 		HbA1cTable hbA1cTable = hbA1cTableRepository.save(followUpDto.getHba1ctable());
 		ThyroidProfile thyroidProfile = thyroidProfileRepository.save(followUpDto.getThyroidProfile());
-		LipidProfile lipidProfile = lipidProfileRepository.save(followUpDto.getLipidProfile());
-		UrineAlbuminCreatinineRatio urineAlbuminCreatinineRatio = urineAlbuminCreatinineRatioRepository.save(followUpDto.getUrineAlbuminCreatinineRatio());
-		FundusExamination fundusExamination = fundusExaminationRepository.save(followUpDto.getFundusExamination());
-		FootExamination footExamination = footExaminationRepository.save(followUpDto.getFootExamination());
+		if(followUpDto.getLipidProfile() != null)
+		{
+			LipidProfile lipidProfile = lipidProfileRepository.save(followUpDto.getLipidProfile());
+			followUp.setLipidProfile(lipidProfile);
+		}
+		if(followUpDto.getUrineAlbuminCreatinineRatio() != null)
+		{
+			UrineAlbuminCreatinineRatio urineAlbuminCreatinineRatio = urineAlbuminCreatinineRatioRepository.save(followUpDto.getUrineAlbuminCreatinineRatio());
+			followUp.setUrineAlbuminCreatinineRatio(urineAlbuminCreatinineRatio);
+		}
+		if(followUpDto.getFundusExamination() != null)
+		{
+			FundusExamination fundusExamination = fundusExaminationRepository.save(followUpDto.getFundusExamination());
+			followUp.setFundusExamination(fundusExamination);
+		}
+		if(followUpDto.getFootExamination() != null)
+		{
+			FootExamination footExamination = footExaminationRepository.save(followUpDto.getFootExamination());
+			followUp.setFootExamination(footExamination);
+		}
 		
-		Baseline baseline = this.baselineRepository.findById(baselineId).orElseThrow(() -> new ResourceNotFoundException("Baseline", "BaselineId", baselineId));
-		
-		FollowUp followUp = this.modelMapper.map(followUpDto, FollowUp.class);
-		followUp.setFootExamination(footExamination);
-		followUp.setFundusExamination(fundusExamination);
 		followUp.setHba1ctable(hbA1cTable);
-		followUp.setLipidProfile(lipidProfile);
 		followUp.setThyroidProfile(thyroidProfile);
-		followUp.setUrineAlbuminCreatinineRatio(urineAlbuminCreatinineRatio);
 		followUp.setCdt(new Date());
 		followUp.setStatus(AppConstants.ACTIVE_USER_STATUS);
 
@@ -473,11 +485,10 @@ public class UserServicesImpl implements UserServices
 	public List<FollowUpDto> getFollowUPI(Principal principal) 
 	{
 		List<BaselineDto> baselineDtos = getAllBaseline(principal);
-		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).toList();
 		List<FollowUpDto> followUpDtos = new ArrayList<>();
 		for(BaselineDto b : activeBaselineDtos)
 		{
-			System.out.println("b.getFollowUps() : "+b.getFollowUps());
 			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
 				followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(0), FollowUpDto.class));
 		}
@@ -485,16 +496,16 @@ public class UserServicesImpl implements UserServices
 	}
 	
 	@Override
-	public List<FollowUpDto> getFollowUPII(Principal principal) 
+	public List<FollowUpDto> getFollowUPII(Principal principal)
 	{
 		List<BaselineDto> baselineDtos = getAllBaseline(principal);
-		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).toList();
 		List<FollowUpDto> followUpDtos = new ArrayList<>();
 		for(BaselineDto b : activeBaselineDtos)
 		{
 			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
 			{
-				try{followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(1), FollowUpDto.class));}catch(Exception e){e.printStackTrace();}
+				try{followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(1), FollowUpDto.class));}catch(ArrayIndexOutOfBoundsException a){ a.printStackTrace();}
 			}
 		}
 		return followUpDtos;
@@ -504,7 +515,7 @@ public class UserServicesImpl implements UserServices
 	public List<FollowUpDto> getFollowUPIII(Principal principal) 
 	{
 		List<BaselineDto> baselineDtos = getAllBaseline(principal);
-		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).toList();
 		List<FollowUpDto> followUpDtos = new ArrayList<>();
 		for(BaselineDto b : activeBaselineDtos)
 		{
@@ -520,14 +531,13 @@ public class UserServicesImpl implements UserServices
 	public List<FollowUpDto> getLastFollowUp(Principal principal) 
 	{
 		List<BaselineDto> baselineDtos = getAllBaseline(principal);
-		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).collect(Collectors.toList());
+		List<BaselineDto> activeBaselineDtos = baselineDtos.stream().filter(b->b.getStatus().equalsIgnoreCase(AppConstants.ACTIVE_USER_STATUS)).map(donor -> donor).toList();
 		List<FollowUpDto> followUpDtos = new ArrayList<>();
 		for(BaselineDto b : activeBaselineDtos)
 		{
 			if(b.getFollowUps() != null && !b.getFollowUps().isEmpty())
 			{
 				int i = b.getFollowUps().size();
-				System.out.println(b.getFollowUps().get(i-1).getId());
 				followUpDtos.add(this.modelMapper.map(b.getFollowUps().get(i-1), FollowUpDto.class));
 			}
 		}
